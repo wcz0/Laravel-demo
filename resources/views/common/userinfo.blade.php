@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html lang="zh_cn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+@extends('common.layout')
+@section('meta')
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=8">
     <meta http-equiv="Expires" content="0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-    <title>个人信息</title>
-    {include file="common/css"}
-</head>
-<body>
-    {include file="common/nav"}
+@stop
+@section('title')
+个人信息
+@stop
 
+
+@section('maintext')
     <div class="container-xl">
         <div class="row my-4">
             <div class="col">
@@ -51,23 +49,15 @@
             </div>
             <div class="col-10">
                 <div class="bg-light shadow-sm">
-                    {block name="content"}
-                    {/block}
+                    @section('profile-content')
+                    @show
                 </div>
             </div>
         </div>
     </div>
+@stop
 
-
-
-    {include file="common/js,common/footer"}
-    <script src="__JS__/profile.js"></script>
-    
-    <script>
-        $(document).ready(function(){
-            logined()
-        
-        })
-    </script>
-</body>
-</html>
+@section('js')
+    @parent
+    <script src="{{ asset('static/js/profile.js') }}"></script>
+@stop

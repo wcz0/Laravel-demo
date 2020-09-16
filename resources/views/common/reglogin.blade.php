@@ -64,8 +64,9 @@
                                         <i class="fa fa-refresh" aria-hidden="true"></i>
                                     </span>
                                 </div>
+
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><img id="code-img" src="{:url('index/login/verify')}" alt="captcha" onclick="this.setAttribute('src', '{:url(\'index/login/verify\')}?id=\'+Math.random()');"></span>
+                                    <span class="input-group-text"><img id="code-img" src="{{ url('verify') }}" alt="captcha" onclick="this.setAttribute('src', '{{ url('verify') }}?id='+Math.random())" data-src="{{ url('verify') }}"></span>
                                 </div>
                                 <div class="invalid-feedback"></div>
                             </div>

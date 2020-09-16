@@ -3,6 +3,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Captcha;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +18,13 @@ use App\Http\Controllers\IndexController;
 |
 */
 
+
 Route::get('/', [IndexController::class, 'index']);
 Route::get('about', [IndexController::class, 'about']);
 Route::get('bbs', [IndexController::class, 'bbs']);
 Route::get('contact', [IndexController::class, 'contact']);
 
+Route::get('verify', [LoginController::class, 'verify']);
+
+
+Route::get('logout', [IndexController::class, 'logout']);

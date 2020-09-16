@@ -135,7 +135,7 @@ $(document).ready(function(){
     })
 
     $("#refresh").on({click:function(){
-        $("#code-img").attr("src", $("#code-img").attr("src")+"?id="+Math.random());
+        $("#code-img").attr("src", $("#code-img").data("src")+"?id="+Math.random());
         $("#code").removeClass("is-invalid");
     },mouseover:function(){
         $(this).children().css({

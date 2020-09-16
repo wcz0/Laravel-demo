@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
+    <meta http-equiv="Cache" content="no-cache">
+    @section('meta')
+
+    @show
     <link rel="stylesheet" href="{{ asset('static/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('static/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('static/css/bootstrap.css') }}">
@@ -28,12 +35,13 @@
     
     <!-- footer -->
     @include('common.footer')
+
     @section('js')
+    @show
     <script src="{{ asset('static/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('static/js/popper.min.js') }}"></script>
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
     <script src="{{ asset('static/js/common.js') }}"></script>
-    @show
     <script>
         function logined(){
             $.ajax({
@@ -53,7 +61,7 @@
             $("#index-page").addClass("active")
             $.ajax({
                 type: "POST",
-                url: "{:url('@index/login/cookielogin')}",
+                url: "{{ url('cookielogin') }}",
                 success: data=>{
                     if(data=="success"){
                         location.reload()
