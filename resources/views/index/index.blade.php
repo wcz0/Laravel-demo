@@ -4,7 +4,7 @@
 <div class="container">
     <div class="jumbotron my-4">
         <h1 class="display-4">Hello, world!</h1>
-        <p class="lead">这是一个thinkphp项目.</p>
+        <p class="lead">这是一个laravel项目.</p>
         <hr class="my-4">
         <h5>todo</h5>
         <ul>

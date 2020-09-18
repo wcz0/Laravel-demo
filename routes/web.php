@@ -28,3 +28,6 @@ Route::get('verify', [LoginController::class, 'verify']);
 
 
 Route::get('logout', [IndexController::class, 'logout']);
+Route::any('checkLogined', [IndexController::class, 'checkLogined']);
+Route::post('checkSession', [IndexController::class, 'checkSession']);
+

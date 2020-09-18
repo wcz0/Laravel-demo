@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh_cn">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +7,7 @@
     <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
     <meta HTTP-EQUIV="expires" CONTENT="0">
     <meta http-equiv="Cache" content="no-cache">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @section('meta')
 
     @show
@@ -44,6 +44,11 @@
     <script src="{{ asset('static/js/common.js') }}"></script>
     <script>
         function logined(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             $.ajax({
                 type: "POST",
                 url: $("#login-btn").attr("data-purl"),

@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
+use Cookie;
 
 class IndexController extends Controller
 {
     public function index()
     {
         return view('index.index');
+
     }
 
     public function about(Request $request)
@@ -29,7 +32,7 @@ class IndexController extends Controller
 
     public function checkLogined()
     {
-        if(Session::get('logined')!=null){
+        if(session('logined')!=null){
             return "logined";
         }else return "notlogin";
     }
@@ -37,7 +40,7 @@ class IndexController extends Controller
     public function logout()
     {
         session()->flush();
-        // Cookie::set('login_token', "");
+        Cookie::queue('login_token', '');
         return redirect('/');
     }
 

@@ -21,7 +21,7 @@
             </li>
         </ul>
         <div class="text-center">
-            <button id="login-btn" class="btn btn-outline-success btn-block my-2 my-sm-0" data-toggle="modal" data-target="#modal" type="button" data-url="{:url('@index/profile/userInfo')}" data-purl="{:url('@index/index/checkLogined')}" onload="logined()">登录</button>
+            <button id="login-btn" class="btn btn-outline-success btn-block my-2 my-sm-0" data-toggle="modal" data-target="#modal" type="button" data-url="{{ url('userInfo') }}" data-purl="{{ url('checkLogined') }}" onload="logined()">登录</button>
         </div>
     </div>
 </nav>
