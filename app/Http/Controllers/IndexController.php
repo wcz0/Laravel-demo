@@ -12,7 +12,6 @@ class IndexController extends Controller
     public function index()
     {
         return view('index.index');
-
     }
 
     public function about(Request $request)
@@ -32,9 +31,12 @@ class IndexController extends Controller
 
     public function checkLogined()
     {
-        if(session('logined')!=null){
-            return "logined";
-        }else return "notlogin";
+        if(session()->get('logined')!=null){
+            return response()->json(['error'=>['code'=>1, 'message'=>'Logged in']]);
+        }else{
+            // return "notlogin";
+            return response()->json(['error'=>['code'=>0, 'message'=>'unlogged']]);
+        }
     }
 
     public function logout()

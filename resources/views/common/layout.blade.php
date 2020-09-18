@@ -44,16 +44,13 @@
     <script src="{{ asset('static/js/common.js') }}"></script>
     <script>
         function logined(){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            
             $.ajax({
                 type: "POST",
                 url: $("#login-btn").attr("data-purl"),
                 success: data=>{
-                    if(data=="logined"){
+                    console.log(data)
+                    if(data.error.code){
                         $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='__ROOT__/{$data.avatar_url}avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
                     }else{
                         $("#login-btn").removeAttr("onclick").attr('data-togle', 'modal').html("登录").removeClass("p-0")
@@ -62,6 +59,11 @@
             })
         }
         $(document).ready(function(){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
             logined()
             $("#index-page").addClass("active")
             $.ajax({
