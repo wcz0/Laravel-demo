@@ -282,7 +282,8 @@ $(document).ready(function(){
                 "login_state" : loginstateFlag
             },
             success: data=>{
-                if(data=="success"){
+                console.log(data.success)
+                if(data.success){
                     $("#modal").modal("hide");
                     $("#login-password").removeClass("is-invalid is-valid");
                     $("#login-phone").removeClass("is-valid is-invalid");

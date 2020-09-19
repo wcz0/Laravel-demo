@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Web;
+use Illuminate\Support\Facades\DB;
+use Cookie;
 
 class LoginController extends Controller
 {
@@ -19,50 +22,56 @@ class LoginController extends Controller
             return false;
         }
         $code = strtolower($_POST['code']);
-        if(Session::get('verify_code')==null){
+        if(session()->get('verify_code')==null){
             return false;
         }
-        if($code==Session::get('verify_code')){
+        if($code==session()->get('verify_code')){
             return true;
         }else{
             return false;
         }
     }
 
-    public function register()
+    public function register(Request $request)
     {   
-        if(empty($_POST['code'])){
-            return "error";
+        if(!$request->has('code')){
+            return response()->json(["error"=>['code'=>001,'message'=>'code is empty!']]);
         }
-        if(empty($_POST['phone_email'])){
-            return "error";
+        if(!$request->has('phone_email')){
+            return response()->json(["error"=>['code'=>002,'message'=>'email is empty!']]);
         }
 
-        $code = strtolower($_POST['code']);
-        $phoneEmail = $_POST['phone_email'];
+        $code = strtolower($request->input('code'));
+        $phoneEmail = $request->input('phone_email');
 
-        if(Session::get('verify_code')==null){
-            return "error1";
+        if(!session()->has('verify_code')){
+            return response()->json(["error"=>['code'=>003,'message'=>'verify code is empty!']]);
         }
-        if($code!=Session::get('verify_code')){
-            return "error1";
+        if($code!=session()->get('verify_code')){
+            return response()->json(["error"=>['code'=>004,'message'=>'The code is incorrect!']]);
         }
         if($this->cehckUserIs($phoneEmail)){
-            return 'error3';
+            return response()->json(["error"=>['code'=>005,'message'=>'user already exists!']]);
         }
         if(preg_match('/^1[3-9]\d{9}$/', $phoneEmail)){
-            Session::set('phone', $phoneEmail);
-            Session::set('reg_state', '1');
+            session()->set('phone', $phoneEmail);
+            session()->set('reg_state', '1');
             if($this->sendCodeSms()){
                 return $phoneEmail;
-            }else return 'error2';
+            }else{
+                return response()->json(["error"=>['code'=>006,'message'=>'server is error!']]);
+            };
         }else if(preg_match('/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/', $phoneEmail)){
-            Session::set('email', $phoneEmail);
-            Session::set('reg_state', '0');
+            session()->set('email', $phoneEmail);
+            session()->set('reg_state', '0');
             if($this->sendCodeEmail()){
                 return $phoneEmail;
-            }else return 'error2';
-        }else return "error2";
+            }else{
+                return response()->json(["error"=>['code'=>007,'message'=>'server is error!']]);
+            };
+        }else{
+            return response()->json(["error"=>['code'=>003,'message'=>'phone or email is incorrect!']]);
+        };
     }
     /**
      * 检查用户是否存在
@@ -83,7 +92,7 @@ class LoginController extends Controller
 
     public function sendCodeSmsEmail()
     {
-        if(Session::get('reg_state')){
+        if(session()->get('reg_state')){
             $this->sendCodeSms();
         }else $this->sendCodeSmsEmail();
     }
@@ -96,7 +105,7 @@ class LoginController extends Controller
     {
         //此类涉及个人账户
         $sm = new SendEmail();
-        $res = $sm->sendCodeEmail(Session::get('email'));
+        $res = $sm->sendCodeEmail(session()->get('email'));
         if($res==0){
             return 1;
         }else return 0;
@@ -109,7 +118,7 @@ class LoginController extends Controller
     {
         //此类涉及个人账户
         $sm = new SendSms();
-        $res = $sm->sendCodeSms(Session::get('phone'));
+        $res = $sm->sendCodeSms(session()->get('phone'));
         if($res==0){
             return 1;
         }else return 0;
@@ -128,34 +137,34 @@ class LoginController extends Controller
         if(!((strlen($p)>7&&strlen($p)<21)&&((preg_match('/\d/', $p)&&preg_match('/[a-zA-Z]/', $p))||(preg_match('/[a-zA-Z]/', $p)&&preg_match('/\W/', $p))||(preg_match('/\d/', $p)&&preg_match('/\W/', $p))))){
             return "error2";
         }
-        if(Session::get('reg_state')){
-            if(Session::get('sms_code')==null||Session::get('phone')==null){
+        if(session()->get('reg_state')){
+            if(session()->get('sms_code')==null||session()->get('phone')==null){
                 return "error";
             }
-            if($code!=Session::get('sms_code')){
+            if($code!=session()->get('sms_code')){
                 return "error1";
             }
-            $phone = Session::get('phone');
+            $phone = session()->get('phone');
             $state = $this->regCreatePhone($phone, $p);
             if($state!=0){
                     $res = Web::get($state);
                     $array = $res->toArray();
-                    Session::set('logined', $array);
+                    session()->set('logined', $array);
                     return "success";
             }else return "error";
         }else{
-            if(Session::get('email_code')==null||Session::get('email')==null){
+            if(session()->get('email_code')==null||session()->get('email')==null){
                 return 'error';
             }
-            if($code!=Session::get('email_code')){
+            if($code!=session()->get('email_code')){
                 return "error1";
             }
-            $email = Session::get('email');
+            $email = session()->get('email');
             $state = $this->regCreateEmail($email, $p);
             if($state!=0){
                 $res = Web::get($state);
                 $array = $res->toArray();
-                Session::set('logined', $array);
+                session()->set('logined', $array);
                 return "success";
             }else return "error";
         }
@@ -221,55 +230,61 @@ class LoginController extends Controller
         
     }
 
-    public function login()
+    public function login(Request $request)
     {
-        if(empty($_POST['login_i'])||empty($_POST['password'])){
-            return "error";
+        if(!$request->has('login_i')){
+            return response()->json(["error"=>['code'=>001,'message'=>'login_i is empty!']]);
         }
-        if($_POST['login_i']=='null'){
-            return 'error1';
+        if(!$request->has('password')){
+            return response()->json(["error"=>['code'=>002,'message'=>'password is empty!']]);
         }
-        $login = $_POST['login_i'];
-        $passwd = $_POST['password'];
+        $login = $request->input('login_i');
+        $passwd = $request->input('password');
 
         try{
-        $res = Web::where('phone', $login)
-                ->whereor('email', $login)
-                ->whereor('username', $login)
-                ->find();
-        if(empty($res)){
-            return "error1";
+        $web = Web::where('phone', $login)
+                ->orWhere('email', $login)
+                ->orWhere('username', $login)
+                ->first();
+        if(empty($web)){
+            return response()->json(["error"=>['code'=>003,'message'=>'User not found!']]);
         }
-        $array = $res->toArray();
+        $array = $web->toArray();
         }catch(Exception $e){
-            return "error";
+            return response()->json(["error"=>['code'=>004,'message'=>'Database exception!']]);
         }
         if($array['phone']==$login&&$array['password']==md5($passwd)||$array['email']==$login&&$array['password']==md5($passwd)||$array['username']==$login&&$array['password']==md5($passwd)){
-            Session::set('logined', $array);
-            if($_POST['login_state']==1){
+            session()->put('logined', $array);
+            if($request->input('login_state')==1){
                 $code = $this->code();
-                Cookie::set('last_login_username', $login, ['expire'=>604800]);
-                Cookie::set("login_token", $code, ['expire'=>604800]);
-                Cookie::set("loginstate", 1, ['expire'=>604800]);
+                Cookie::queue('last_login_username', $login, 10080);
+                Cookie::queue("login_token", $code, 10080);
+                Cookie::queue("loginstate", 1, 10080);
                 try{
-                    $user = Web::get($array['id']);
-                    $user->login_token = $code;
-                    $user->save();
+                    $web = Web::find($array['id']);
+                    $web->login_token = $code;
+                    $web->save();
                 }catch(Exception $e){
-                    return 'error3';
+                    return response()->json(["error"=>['code'=>005,'Database exception!']]);
                 }
             }
-            return "success";
-        }else return "error2";
-    }
-    public function cookieLogin()
-    {
-        if(Session::has('logined')){
-            return 'logined';
+            return response()->json(["success"=>['code'=>101,'message'=>'Success login!']]);
+        }else{
+            return response()->json(["error"=>['code'=>006,'message'=>'user or password is error!']]);
         }
-        if(Cookie::has('last_login_username')&&Cookie::has('login_token')){
-            $login=Cookie::get('last_login_username');
-            $login_token=Cookie::get('login_token');
+    }
+
+    /**
+     * 检测用户session是否存在
+     */
+    public function cookieLogin(Request $request)
+    {
+        if(session()->has('logined')){
+            return response()->json(['error'=>['code'=>001, 'message'=>'']]);
+        }
+        if($request->cookie('last_login_username')!=null&&$request->get('login_token')!=null){
+            $login=$request->cookie('last_login_username');
+            $login_token=$request->cookie('login_token');
             try{
                 $res = Web::where('phone', $login)
                         ->whereor('email', $login)
@@ -298,7 +313,7 @@ class LoginController extends Controller
                         }
                     }
                 }
-                Session::set('logined', $array);
+                session()->set('logined', $array);
                 return 'success';
             }
         }return 'error';
@@ -316,5 +331,17 @@ class LoginController extends Controller
             $code .= $fontContext;
         }
         return $code;
+    }
+
+    public function test()
+    {
+        $web = Web::where('phone', '')
+                    ->orWhere('email', '707636381@qq.com')            
+        ->first();
+        dump(
+            // Web::where('phone', '1889288054')
+            
+            $web->toArray()
+        );
     }
 }

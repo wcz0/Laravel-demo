@@ -7,16 +7,16 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto p">
-            <li class="nav-item" id="index-page">
+            <li class="nav-item {{ Request::getPathInfo()=='/'?'active':'' }}">
                 <a class="nav-link" href="{{ url('/') }}">主页</a>
             </li>
-            <li class="nav-item" id="bbs-page">
+            <li class="nav-item {{ Request::getPathInfo()=='/bbs'?'active':'' }}">
                 <a class="nav-link" href="{{ url('bbs') }}">论坛</a>
             </li>
-            <li class="nav-item" id="contact-page">
+            <li class="nav-item {{ Request::getPathInfo()=='/contact'?'active':'' }}">
                 <a class="nav-link" href="{{ url('contact') }}">联系我们</a>
             </li>
-            <li class="nav-item" id="about-page">
+            <li class="nav-item {{ Request::getPathInfo()=='/about'?'active':'' }}">
                 <a class="nav-link" href="{{ url('about') }}">关于</a>
             </li>
         </ul>

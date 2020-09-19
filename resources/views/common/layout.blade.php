@@ -68,7 +68,7 @@
             $("#index-page").addClass("active")
             $.ajax({
                 type: "POST",
-                url: "{{ url('cookielogin') }}",
+                url: "{{ url('login/cookielogin') }}",
                 success: data=>{
                     if(data=="success"){
                         location.reload()

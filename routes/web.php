@@ -24,10 +24,14 @@ Route::get('about', [IndexController::class, 'about']);
 Route::get('bbs', [IndexController::class, 'bbs']);
 Route::get('contact', [IndexController::class, 'contact']);
 
-Route::get('verify', [LoginController::class, 'verify']);
-
-
 Route::get('logout', [IndexController::class, 'logout']);
 Route::any('checkLogined', [IndexController::class, 'checkLogined']);
 Route::post('checkSession', [IndexController::class, 'checkSession']);
 
+
+Route::prefix('login')->group(function(){
+    Route::post('cookieLogin', [LoginController::class, 'cookieLogin']);
+    Route::post('login', [LoginController::class, 'login']);
+    Route::get('verify', [LoginController::class, 'verify']);
+    Route::any('test', [LoginController::class, 'test']);
+});

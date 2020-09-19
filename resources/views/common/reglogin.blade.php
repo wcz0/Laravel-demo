@@ -40,7 +40,7 @@
                             <label class="form-check-label" for="login_state">7天内自动登录</label>
                         </div>
                         <small class="mt-2 mb-3 form-text text-muted">还没注册?<a href="#reg" onclick="document.getElementById('reg-tab').click()">点击注册</a></small>
-                        <button id="login" type="submit" class="btn btn-primary btn-block mb-2" data-purl="{:url('@index/login/login')}">登录</button>
+                        <button id="login" type="submit" class="btn btn-primary btn-block mb-2" data-purl="{{url('login/login')}}">登录</button>
                         <button id="login-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
                     </form>
                 </div>
@@ -66,7 +66,7 @@
                                 </div>
 
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><img id="code-img" src="{{ url('verify') }}" alt="captcha" onclick="this.setAttribute('src', '{{ url('verify') }}?id='+Math.random())" data-src="{{ url('verify') }}"></span>
+                                    <span class="input-group-text"><img id="code-img" src="{{ url('login/verify') }}" alt="captcha" onclick="this.setAttribute('src', '{{ url('login/verify') }}?id='+Math.random())" data-src="{{ url('login/verify') }}"></span>
                                 </div>
                                 <div class="invalid-feedback"></div>
                             </div>
