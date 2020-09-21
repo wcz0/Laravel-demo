@@ -14,6 +14,7 @@ class Captcha
         'bgColors'  =>  [233,236,239]
     ];
 
+
     public function __construct($config = [])
     {
         $this->config = array_merge($this->config, $config);
@@ -42,7 +43,8 @@ class Captcha
      */
     public function captcha()
     {
-        header('content-type:image/png');
+
+        header('Content-Type:image/png');
         try{
         $image = imagecreatetruecolor($this->imageW, $this->imageH);
         $bgColor = imagecolorallocate($image, $this->bgColors[0], $this->bgColors[1], $this->bgColors[2]);
@@ -69,6 +71,7 @@ class Captcha
         }
         //设置session
         session()->put('verify_code', strtolower($code));
+        
 
         //描绘点
         for($i=0;$i<($this->imageH*$this->imageW/5);$i++){
@@ -82,12 +85,14 @@ class Captcha
         }
         //输出图像
         imagepng($image);
-
+        
         //销毁图像
         imagedestroy($image);
+        // return strtolower($code);
+        // exit();
         }catch(Exception $e){
             echo $e;
         }
-        exit;
+        
     }
 }

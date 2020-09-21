@@ -30,7 +30,7 @@ $(document).ready(function(){
                 "code" : $("#code").val(),
             },
             success: data => {
-                if(data){
+                if(data.success){
                     $("#code").removeClass("is-invalid").addClass("is-valid");
                     codeFlag = 1;
                 }else {
@@ -91,23 +91,27 @@ $(document).ready(function(){
                 "code" : $("#code").val()
             },
             success: data=> {
-                if(data=="error"){
-                    $("body").append(`
-                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
-                        <strong>服务器错误!</strong>请联系管理员
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    `);
-                }else if(data=="error1"){
-                    $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
-                }else if(data=="error2"){
-                    $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码或邮箱");
-                }else if(data=="error3"){
-                    $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("此用户已经存在");
+                if(data.error){
+                    if(data.error.code=='004'){
+                        $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("验证码错误");
+                    }else if(data.error.code=='007'){
+                        $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的手机号码");
+                    }else if(data.error.code=='009'){
+                        $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请输入正确的邮箱");
+                    }else if(data.error.code=='005'){
+                        $("#reg-phone-email").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("此用户已经存在");
+                    }else{
+                        $("body").append(`
+                        <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                            <strong>服务器错误!</strong>请联系管理员
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        `);
+                    }
                 }else{
-                    $("#feedback-phone-email").text(data);
+                    $("#feedback-phone-email").text(data.success.text);
                     time($("#resend"));
                     $("#reg-reset").click();
                     $("#code").removeClass("is-invalid is-valid");
@@ -282,8 +286,22 @@ $(document).ready(function(){
                 "login_state" : loginstateFlag
             },
             success: data=>{
-                console.log(data.success)
-                if(data.success){
+                if(data.error){
+                    if(data.error.code=='003'){
+                        $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
+                    }else if(data.error.code=='006'){
+                        $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("账号或者密码错误");
+                    }else{
+                        $("body").append(`
+                        <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
+                            <strong>服务器错误!</strong>请联系管理员
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                      `);
+                    }
+                }else{
                     $("#modal").modal("hide");
                     $("#login-password").removeClass("is-invalid is-valid");
                     $("#login-phone").removeClass("is-valid is-invalid");
@@ -297,19 +315,6 @@ $(document).ready(function(){
                         </div>
                     `);
                     setTimeout(location.reload(true), 1000)
-                }else if(data=="error1"){
-                    $("#login-phone").addClass("is-invalid").siblings(".invalid-feedback").text("此用户不存在");
-                }else if(data=="error2"){
-                    $("#login-password").addClass("is-invalid").siblings(".invalid-feedback").text("账号或者密码错误");
-                }else{
-                    $("body").append(`
-                    <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
-                        <strong>服务器错误!</strong>请联系管理员
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                  `);
                 }
             },
             error: ()=>{

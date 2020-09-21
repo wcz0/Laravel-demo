@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
-    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
-    <meta HTTP-EQUIV="expires" CONTENT="0">
-    <meta http-equiv="Cache" content="no-cache">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @section('meta')
 
@@ -44,12 +41,10 @@
     <script src="{{ asset('static/js/common.js') }}"></script>
     <script>
         function logined(){
-            
             $.ajax({
                 type: "POST",
                 url: $("#login-btn").attr("data-purl"),
                 success: data=>{
-                    console.log(data)
                     if(data.error.code){
                         $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='__ROOT__/{$data.avatar_url}avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
                     }else{
@@ -68,9 +63,9 @@
             $("#index-page").addClass("active")
             $.ajax({
                 type: "POST",
-                url: "{{ url('login/cookielogin') }}",
+                url: "{{ url('login/cookieLogin') }}",
                 success: data=>{
-                    if(data=="success"){
+                    if(data.success){
                         location.reload()
                     }
                 }

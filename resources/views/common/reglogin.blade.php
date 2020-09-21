@@ -57,7 +57,7 @@
                         <div class="form-group">
                             <label for="code">验证码</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="code" placeholder="请输入验证码" maxlength="4" data-purl="{:url('@index/login/checkCode')}"/>
+                                <input type="text" class="form-control" id="code" placeholder="请输入验证码" maxlength="4" data-purl="{{url('login/checkCode')}}"/>
                                 
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="refresh">
@@ -76,7 +76,7 @@
                             <label class="form-check-label" for="reg-license">同意注册协议</label>
                             <div class="invalid-feedback">你必须同意注册协议</div>
                         </div>
-                        <button id="reg-submit" type="submit" class="btn btn-primary btn-block mb-2" data-target="#staticBackdrop" data-purl="{:url('@index/login/register')}">注册</button>
+                        <button id="reg-submit" type="submit" class="btn btn-primary btn-block mb-2" data-target="#staticBackdrop" data-purl="{{url('login/register')}}">注册</button>
                         <button id="reg-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
                     </form>
                 </div>
@@ -109,7 +109,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="sms-code" placeholder="请输入6位验证码" maxlength="6"/>
                         <div class="input-group-prepend">
-                            <button class="input-group-text" id="resend" type="button" data-purl="{:url('@index/login/sendCodeSmsEmail')}">重新发送验证码</button>
+                            <button class="input-group-text" id="resend" type="button" data-purl="{{url('login/sendCodeSmsEmail')}}">重新发送验证码</button>
                         </div>
                         <div class="invalid-feedback"></div>
                     </div>

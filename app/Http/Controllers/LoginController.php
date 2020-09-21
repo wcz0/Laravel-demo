@@ -6,72 +6,83 @@ use Illuminate\Http\Request;
 use App\Models\Web;
 use Illuminate\Support\Facades\DB;
 use Cookie;
+use Session;
 
 class LoginController extends Controller
 {
     public function verify()
     {     
         $captcha = new Captcha();
+        // $code = $captcha->captcha();
+        // session()->put('verify_code', $code);
         $captcha->captcha();
     }
-    
-
-    public function checkCode()
+    /**
+     * 验证码动态监测
+     */
+    public function checkCode(Request $request)
     {
-        if(empty($_POST['code'])){
-            return false;
+        if(empty($request->input('code'))){
+            return response()->json(["error"=>['code'=>'001','message'=>'code is empty!']]);
         }
-        $code = strtolower($_POST['code']);
-        if(session()->get('verify_code')==null){
-            return false;
+        $code = strtolower($request->input('code'));
+        if(!session()->has('verify_code')){
+            return response()->json(["error"=>['code'=>'002','message'=>'session-verify_code is empty!']]);
         }
-        if($code==session()->get('verify_code')){
-            return true;
+        if($code==session('verify_code')){
+            return response()->json(["success"=>['code'=>'101','message'=>'code is true!']]);
         }else{
-            return false;
+            return response()->json(["error"=>['code'=>'003','message'=>'code is error!']]);
         }
     }
 
+    /**
+     * 注册请求
+     */
     public function register(Request $request)
     {   
         if(!$request->has('code')){
-            return response()->json(["error"=>['code'=>001,'message'=>'code is empty!']]);
+            return response()->json(["error"=>['code'=>'001','message'=>'code is empty!']]);
         }
         if(!$request->has('phone_email')){
-            return response()->json(["error"=>['code'=>002,'message'=>'email is empty!']]);
+            return response()->json(["error"=>['code'=>'002','message'=>'email is empty!']]);
         }
 
         $code = strtolower($request->input('code'));
         $phoneEmail = $request->input('phone_email');
 
         if(!session()->has('verify_code')){
-            return response()->json(["error"=>['code'=>003,'message'=>'verify code is empty!']]);
+            return response()->json(["error"=>['code'=>'003','message'=>'verify code is empty!']]);
         }
         if($code!=session()->get('verify_code')){
-            return response()->json(["error"=>['code'=>004,'message'=>'The code is incorrect!']]);
+            return response()->json(["error"=>['code'=>'004','message'=>'The code is incorrect!']]);
         }
         if($this->cehckUserIs($phoneEmail)){
-            return response()->json(["error"=>['code'=>005,'message'=>'user already exists!']]);
+            return response()->json(["error"=>['code'=>'005','message'=>'user already exists!']]);
         }
+
         if(preg_match('/^1[3-9]\d{9}$/', $phoneEmail)){
-            session()->set('phone', $phoneEmail);
-            session()->set('reg_state', '1');
+            session()->put('phone', $phoneEmail);
+            session()->put('reg_state', '1');
             if($this->sendCodeSms()){
-                return $phoneEmail;
+                return response()->json(["success"=>['code'=>'101','message'=>'success send phone code!', 'text'=>$phoneEmail]]);
             }else{
-                return response()->json(["error"=>['code'=>006,'message'=>'server is error!']]);
+                return response()->json(["error"=>['code'=>'006','message'=>'server is error!']]);
             };
         }else if(preg_match('/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/', $phoneEmail)){
-            session()->set('email', $phoneEmail);
-            session()->set('reg_state', '0');
+            session()->put('email', $phoneEmail);
+            session()->put('reg_state', '0');
             if($this->sendCodeEmail()){
-                return $phoneEmail;
+                return response()->json(["success"=>['code'=>'102','message'=>'success send email code!', 'text'=>$phoneEmail]]);
             }else{
-                return response()->json(["error"=>['code'=>007,'message'=>'server is error!']]);
+                return response()->json(["error"=>['code'=>'007','message'=>'server is error!']]);
             };
+        }else if(preg_match('/@/', $phoneEmail)){
+            return response()->json(["error"=>['code'=>'008','message'=>'Incorrect email format!']]);
         }else{
-            return response()->json(["error"=>['code'=>003,'message'=>'phone or email is incorrect!']]);
-        };
+            return response()->json(["error"=>['code'=>'009','message'=>'Incorrect phone format!']]);
+        }
+        
     }
     /**
      * 检查用户是否存在
@@ -80,16 +91,18 @@ class LoginController extends Controller
      */
     public function cehckUserIs($login)
     {
-        $res = Web::where('phone', $login)
-                ->whereor('email', $login)
-                ->whereor('username', $login)
-                ->find();
-        if($res){
+        $web = Web::where('phone', $login)
+                ->orWhere('email', $login)
+                ->orWhere('username', $login)
+                ->first();
+        if($web){
             return 1;
         }else return 0;
     }
 
-
+    /**
+     * 发送验证码
+     */
     public function sendCodeSmsEmail()
     {
         if(session()->get('reg_state')){
@@ -124,21 +137,24 @@ class LoginController extends Controller
         }else return 0;
     }
 
-    public function register2()
+    /**
+     * 注册请求2, 验证密码复杂度
+     */
+    public function register2(Request $request)
     {
-        if(empty($_POST['code'])){
+        if(!$request->has('code')){
             return "error";
         }
-        if(empty($_POST['password'])){
+        if(!$request->has('password')){
             return "error";
         }
-        $code = $_POST['code'];
-        $p = $_POST['password'];
+        $code = $request->input('code');
+        $p = $request->input('password');
         if(!((strlen($p)>7&&strlen($p)<21)&&((preg_match('/\d/', $p)&&preg_match('/[a-zA-Z]/', $p))||(preg_match('/[a-zA-Z]/', $p)&&preg_match('/\W/', $p))||(preg_match('/\d/', $p)&&preg_match('/\W/', $p))))){
             return "error2";
         }
         if(session()->get('reg_state')){
-            if(session()->get('sms_code')==null||session()->get('phone')==null){
+            if(session()->has('sms_code')||session()->has('phone')){
                 return "error";
             }
             if($code!=session()->get('sms_code')){
@@ -149,9 +165,11 @@ class LoginController extends Controller
             if($state!=0){
                     $res = Web::get($state);
                     $array = $res->toArray();
-                    session()->set('logined', $array);
+                    session()->put('logined', $array);
                     return "success";
-            }else return "error";
+            }else{
+                return "error";
+            }
         }else{
             if(session()->get('email_code')==null||session()->get('email')==null){
                 return 'error';
@@ -164,7 +182,7 @@ class LoginController extends Controller
             if($state!=0){
                 $res = Web::get($state);
                 $array = $res->toArray();
-                session()->set('logined', $array);
+                session()->put('logined', $array);
                 return "success";
             }else return "error";
         }
@@ -193,7 +211,9 @@ class LoginController extends Controller
         try{
             if($user->save()){
                 return $user->id;
-            }else return 0;
+            }else{
+                return 0;
+            }
         }catch(Exception $e){
             return 0;
         }
@@ -230,13 +250,16 @@ class LoginController extends Controller
         
     }
 
+    /**
+     * 登录请求
+     */
     public function login(Request $request)
     {
         if(!$request->has('login_i')){
-            return response()->json(["error"=>['code'=>001,'message'=>'login_i is empty!']]);
+            return response()->json(["error"=>['code'=>'001','message'=>'login_i is empty!']]);
         }
         if(!$request->has('password')){
-            return response()->json(["error"=>['code'=>002,'message'=>'password is empty!']]);
+            return response()->json(["error"=>['code'=>'002','message'=>'password is empty!']]);
         }
         $login = $request->input('login_i');
         $passwd = $request->input('password');
@@ -247,11 +270,11 @@ class LoginController extends Controller
                 ->orWhere('username', $login)
                 ->first();
         if(empty($web)){
-            return response()->json(["error"=>['code'=>003,'message'=>'User not found!']]);
+            return response()->json(["error"=>['code'=>'003','message'=>'User not found!']]);
         }
         $array = $web->toArray();
         }catch(Exception $e){
-            return response()->json(["error"=>['code'=>004,'message'=>'Database exception!']]);
+            return response()->json(["error"=>['code'=>'004','message'=>'Database exception!']]);
         }
         if($array['phone']==$login&&$array['password']==md5($passwd)||$array['email']==$login&&$array['password']==md5($passwd)||$array['username']==$login&&$array['password']==md5($passwd)){
             session()->put('logined', $array);
@@ -265,58 +288,59 @@ class LoginController extends Controller
                     $web->login_token = $code;
                     $web->save();
                 }catch(Exception $e){
-                    return response()->json(["error"=>['code'=>005,'Database exception!']]);
+                    return response()->json(["error"=>['code'=>'005','Database exception!']]);
                 }
             }
-            return response()->json(["success"=>['code'=>101,'message'=>'Success login!']]);
+            return response()->json(["success"=>['code'=>'101','message'=>'Success login!']]);
         }else{
-            return response()->json(["error"=>['code'=>006,'message'=>'user or password is error!']]);
+            return response()->json(["error"=>['code'=>'006','message'=>'user or password is error!']]);
         }
     }
 
     /**
      * 检测用户session是否存在
+     * 7天免登录, 重置免登录时间
      */
     public function cookieLogin(Request $request)
     {
         if(session()->has('logined')){
-            return response()->json(['error'=>['code'=>001, 'message'=>'']]);
+            return response()->json(['error'=>['code'=>'001', 'message'=>'session-logined is not exists!']]);
         }
-        if($request->cookie('last_login_username')!=null&&$request->get('login_token')!=null){
+        if($request->cookie('last_login_username')!=null&&$request->cookie('login_token')!=null){
             $login=$request->cookie('last_login_username');
             $login_token=$request->cookie('login_token');
             try{
-                $res = Web::where('phone', $login)
-                        ->whereor('email', $login)
-                        ->whereor('username', $login)
-                        ->find();
-            if(empty($res)){
-                return "error1";
+                $web = Web::where('phone', $login)
+                        ->orWhere('email', $login)
+                        ->orWhere('username', $login)
+                        ->first();
+            if(empty($web)){
+                return response()->json(['error'=>['code'=>'002', 'message'=>'user not found!']]);
             }
-            $array = $res->toArray();
+            $array = $web->toArray();
             }catch(Exception $e){
-                return "error";
+                return response()->json(['error'=>['code'=>'003', 'message'=>'Database exception']]);
             }
             if($array['login_token']==$login_token){
-                if(Cookie::has('loginstate')){
-                    if(Cookie::get('loginstate')==1){
+                if($request->cookie('loginstate')){
+                    if($request->cookie('loginstate')==1){
                         $code = $this->code();
-                        Cookie::set('last_login_username', $login, ['expire'=>604800]);
-                        Cookie::set("login_token", $code, ['expire'=>604800]);
-                        Cookie::set("loginstate", 1, ['expire'=>604800]);
+                        Cookie::queue('last_login_username', $login, 10080);
+                        Cookie::queue("login_token", $code, 10080);
+                        Cookie::queue("loginstate", 1, 10080);
                         try{
-                            $user = Web::get($array['id']);
+                            $user = Web::find($array['id']);
                             $user->login_token = $code;
                             $user->save();
                         }catch(Exception $e){
-                            return 'error';
+                            return response()->json(['error'=>['code'=>'004', 'message'=>'Database exception']]);
                         }
                     }
                 }
-                session()->set('logined', $array);
-                return 'success';
+                session()->put('logined', $array);
+                return response()->json(['success'=>['code'=>'101', 'message'=>'Database exception']]);
             }
-        }return 'error';
+        }
     }
 
     /**
@@ -335,13 +359,10 @@ class LoginController extends Controller
 
     public function test()
     {
-        $web = Web::where('phone', '')
-                    ->orWhere('email', '707636381@qq.com')            
-        ->first();
-        dump(
-            // Web::where('phone', '1889288054')
-            
-            $web->toArray()
-        );
+        Session::put('key', 1112);
+    }
+    public function test1()
+    {
+        return session('verify_code');
     }
 }

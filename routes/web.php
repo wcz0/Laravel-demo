@@ -31,7 +31,26 @@ Route::post('checkSession', [IndexController::class, 'checkSession']);
 
 Route::prefix('login')->group(function(){
     Route::post('cookieLogin', [LoginController::class, 'cookieLogin']);
+    Route::post('checkCode', [LoginController::class, 'checkCode']);
+    Route::post('register', [LoginController::class, 'register']);
+    Route::post('register2', [LoginController::class, 'register2']);
+    Route::post('sendCodeSmsEmail', [LoginController::class, 'sendCodeSmsEmail']);
+
     Route::post('login', [LoginController::class, 'login']);
     Route::get('verify', [LoginController::class, 'verify']);
     Route::any('test', [LoginController::class, 'test']);
+    Route::any('test1', [LoginController::class, 'test1']);
+    
+});
+
+Route::prefix('profile')->group(function(){
+    Route::get('userInfo', [ProfileController::class, 'userInfo']);
+    Route::get('profile', [ProfileController::class, 'profile']);
+    Route::get('avatar', [ProfileController::class, 'avatar']);
+    Route::get('account', [ProfileController::class, 'account']);
+    Route::get('avatar', [ProfileController::class, 'avatar']);
+    Route::get('avatar', [ProfileController::class, 'avatar']);
+    Route::get('avatar', [ProfileController::class, 'avatar']);
+    Route::get('avatar', [ProfileController::class, 'avatar']);
+
 });

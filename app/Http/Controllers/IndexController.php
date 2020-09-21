@@ -34,7 +34,6 @@ class IndexController extends Controller
         if(session()->get('logined')!=null){
             return response()->json(['error'=>['code'=>1, 'message'=>'Logged in']]);
         }else{
-            // return "notlogin";
             return response()->json(['error'=>['code'=>0, 'message'=>'unlogged']]);
         }
     }
@@ -48,8 +47,8 @@ class IndexController extends Controller
 
     public function checkSession()
     {
-        if(Session::get('logined')){
-            $data = Session::get('logined');
+        if(!session()->has('logined')){
+            $data = session()->get('logined');
             $this->assign('data', $data);
         }else  $this->assign('data', ['avatar_url'=>null]);
     }
