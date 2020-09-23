@@ -33,12 +33,14 @@
     <!-- footer -->
     @include('common.footer')
 
-    @section('js')
-    @show
+    
     <script src="{{ asset('static/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('static/js/popper.min.js') }}"></script>
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
     <script src="{{ asset('static/js/common.js') }}"></script>
+    @section('js')
+    
+    @show
     <script>
         function logined(){
             $.ajax({
@@ -72,6 +74,5 @@
             })
         })
     </script>
-    
 </body>
 </html>

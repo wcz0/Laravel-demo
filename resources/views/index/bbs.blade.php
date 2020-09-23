@@ -3,7 +3,7 @@
 
 @section('title')
 论坛
-@stop
+@endsection
 
 @section('maintext')
 <div class="container">
@@ -20,4 +20,4 @@
             <a class="btn btn-primary btn-lg" href="vscode:" role="button">Just do it</a>
           </div>
       </div>
-@stop
+@endsection

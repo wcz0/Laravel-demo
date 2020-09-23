@@ -16,4 +16,4 @@
         <a class="btn btn-primary btn-lg" href="vscode:" role="button">Just do it</a>
       </div>
   </div>
-@stop
+@endsection

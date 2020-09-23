@@ -26,8 +26,6 @@ Route::get('contact', [IndexController::class, 'contact']);
 
 Route::get('logout', [IndexController::class, 'logout']);
 Route::any('checkLogined', [IndexController::class, 'checkLogined']);
-Route::post('checkSession', [IndexController::class, 'checkSession']);
-
 
 Route::prefix('login')->group(function(){
     Route::post('cookieLogin', [LoginController::class, 'cookieLogin']);
@@ -40,17 +38,14 @@ Route::prefix('login')->group(function(){
     Route::get('verify', [LoginController::class, 'verify']);
     Route::any('test', [LoginController::class, 'test']);
     Route::any('test1', [LoginController::class, 'test1']);
-    
 });
 
-Route::prefix('profile')->group(function(){
-    Route::get('userInfo', [ProfileController::class, 'userInfo']);
-    Route::get('profile', [ProfileController::class, 'profile']);
+Route::middleware('checksession')->prefix('profile')->group(function(){
+    Route::get('profile/{op?}', [ProfileController::class, 'profile']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('account', [ProfileController::class, 'account']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
-
 });

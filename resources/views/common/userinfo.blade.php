@@ -5,10 +5,10 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
-@stop
+@endsection
 @section('title')
 个人信息
-@stop
+@endsection
 
 
 @section('maintext')
@@ -32,24 +32,24 @@
         <div class="row">
             <div class="col-2">
                 <ul class="list-group text-center">
-                    <li class="list-group-item active">设置</li>
-                    <li class="list-group-item"><a href="{{url('profile/avatar')}}">修改头像</a></li>
-                    <li class="list-group-item"><a href="{{url('profile/profile')}}">个人资料</a></li>
-                    <li class="list-group-item"><a href="{{url('profile/account')}}">账户安全</a></li>
-                    <li class="list-group-item"><a href="{{url('index/logout')}}">退出登录</a></li>
+                    <li class="list-group-item text-black-50">设置</li>
+                    <li class="list-group-item {{ Request::getPathInfo() == '/profile/avatar' ? 'active text-light' : '' }}"><a class="{{ Request::getPathInfo() == '/profile/avatar' ? 'text-light' : '' }}" href="{{url('profile/avatar')}}">修改头像</a></li>
+                    <li class="list-group-item {{ Request::getPathInfo() == '/profile/profile' || Request::getPathInfo() == '/profile/profile/contact' ? 'active text-light' : '' }}"><a class="{{ Request::getPathInfo() == '/profile/profile' || Request::getPathInfo() == '/profile/profile/contact' ? 'text-light' : '' }}" href="{{url('profile/profile')}}">个人资料</a></li>
+                    <li class="list-group-item {{ Request::getPathInfo() == '/profile/account' ? 'active text-light' : '' }}"><a class="{{ Request::getPathInfo() == '/profile/account' ? 'text-light' : '' }}" href="{{url('profile/account')}}">账户安全</a></li>
+                    <li class="list-group-item "><a href="{{url('logout')}}">退出登录</a></li>
                 </ul>
             </div>
             <div class="col-10">
                 <div class="bg-light shadow-sm">
                     @section('profile-content')
+
                     @show
                 </div>
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('js')
-    @parent
     <script src="{{ asset('static/js/profile.js') }}"></script>
-@stop
+@endsection

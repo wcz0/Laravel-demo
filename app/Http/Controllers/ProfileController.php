@@ -7,18 +7,7 @@ use App\Models\Web;
 
 class ProfileController extends Controller
 {
-    /**
-     *  检测Session
-     */
-    public function checkSession()
-    {
-        if(!session()->has('logined')){
-            // abort(403, '请您登录!');
-            return redirect('/');
-        }
-    }
-
-    public function uploadSession($array)
+    public function updateSession($array)
     {
         $web=Web::find($array['id']);
         return $web->toArray();
@@ -27,10 +16,9 @@ class ProfileController extends Controller
     /**
      * 个人信息页面
      */
-    public function profile($op='base')
+    public function profile(Request $request, $op='base')
     {
-        $this->checkSession();
-        $data = $this->uploadSession(session()->get('logined'));
+        $data = $this->updateSession(session()->get('logined'));
         if($data['birthday']==null){
             $data['birthday']=0;
         }
@@ -39,12 +27,13 @@ class ProfileController extends Controller
         if($op=='base'){
             return view('profile.profile', [
                 'title' =>  '个人资料',
-                'data' => $data
+                'data' => $data,
             ]);
         }else if($op=='contact'){
             return view('profile.profile_contact', [
                 'title' =>  '个人资料',
                 'data' => $data
+
             ]);
         }else{
             abort('参数错误');
@@ -56,14 +45,11 @@ class ProfileController extends Controller
      */
     public function avatar()
     {
-        if(empty(Session::get('logined'))){
-            $this->redirect('profile/userinfo');
-        }
-        $data=$this->uploadSession(Session::get('logined'));
-        $this->assign('title', '修改头像');
-        $this->assign('menus', $this->checkRole());
-        $this->assign('data', $data);
-        return view();
+        $data=$this->updateSession(session()->get('logined'));
+        return view('profile.avatar', [
+            'title' => '修改头像',
+            'data' => $data
+        ]);
     }
 
     /**
@@ -71,66 +57,74 @@ class ProfileController extends Controller
      */
     public function account()
     {
-        if(empty(Session::get('logined'))){
-            $this->redirect('profile/userinfo');
-        }
-        $data=$this->uploadSession(Session::get('logined'));
+        $data=$this->updateSession(session()->get('logined'));
         $this->assign('title', '账号安全');
         $this->assign('menus', $this->checkRole());
         $this->assign('data', $data);
         return view();
     }
     
-    public function profileSave()
+
+    /**
+     * 个人资料保存请求
+     */
+    public function profileSave(Request $request)
     {
-        if(!empty($_POST['name'])){
-            $name = $_POST['name'];
+        if(!$request->has('name')){
+            $name = $request->input('name');
         }else $name = null;
-        if(!empty($_POST['gender'])){
-            $gender = $_POST['gender'];
+        if(!$request->has('gender')){
+            $gender = $request->input('gender');
         }else $gender = 0;
-        if(!empty($_POST['birthday'])){
-            $date = strtotime($_POST['birthday']);
+        if(!!$request->has('birthday')){
+            $date = strtotime($request->input('birthday'));
         }else $date = 0;
-        if(!empty($_POST['signature'])){
-            $signature = $_POST['signature'];
-        }else $signature = null;
-        $array = Session::get('logined');
-        $user = new Web;
+        if(!!$request->has('signature')){
+            $signature = $request->input('signature');
+        }else{
+            $signature = null;
+        }
+        $array = session()->get('logined');
         try{
-            $user->save([
-                'name' => $name,
-                'gender' => $gender,
-                'birthday' => $date,
-                'signature' => $signature
-            ], ['id' => $array['id']]);
-            return "success";
+            $user = Web::find($array['id']);
+            $user->name = $name;
+            $user->gender = $gender;
+            $user->birthday = $date;
+            $user->signature = $signature;
+            $user->save();
+            return response()->json(['success'=>['code'=>'101', 'message' => 'update profile is success!']]);
         }catch(Exception $e){
-            return "error";
+            return response()->json(['error'=>['code'=>'001', 'message' => 'update is error!']]);
         }
     }
 
-    public function profileContactSave()
+    /**
+     * 联系方式保存请求
+     */
+    public function profileContactSave(Request $request)
     {
-        if($_POST['qq']==""){
+        if($request->input('qq')==""){
             $qq=null;
-        }else $qq = $_POST['qq'];
-        $array = Session::get('logined');
-        $user = new Web;
+        }else{
+            $qq = $request->input('qq');
+        }
+        $array = session()->get('logined');
+        $user = Web::find($array['id']);
         try{
-            $user->save([
-                'qq' => $qq,
-            ], ['id' => $array['id']]);
-            return "success";
+            $user->save(['qq' => $qq]);
+            return response()->json(['success'=>['code'=>'101', 'message' => 'update profile is success!']]);
         }catch(Exception $e){
-            return "error";
+            return response()->json(['error'=>['code'=>'001', 'message' => 'update is error!']]);
         }
     }
 
-    public function avatarUpload()
+    /**
+     * 头像上传请求
+     */
+    public function avatarUpload(Request $request)
     {
-        $file = request()->file('image');        
-        $data = Session::get('logined');
+        $file = $request->file('image');
+        $data = session()->get('logined');
         if($file){
             $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg'])->move(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatarsHistory'. DS, time());
             if($info){

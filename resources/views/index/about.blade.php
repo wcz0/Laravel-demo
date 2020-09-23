@@ -2,7 +2,7 @@
 
 @section('title')
 关于我们
-@stop
+@endsection
 @section('maintext')
     <div class="container">
         <div class="jumbotron my-4">
@@ -14,4 +14,4 @@
             <a class="btn btn-primary btn-lg" href="vscode:" role="button">Just do it</a>
         </div>
     </div>
-@stop
+@endsection
