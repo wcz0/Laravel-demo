@@ -1,5 +1,7 @@
 @extends('common.layout')
-
+@section('nav')
+    @parent
+@endsection
 @section('maintext')
 <div class="container">
     <div class="jumbotron my-4">
@@ -8,10 +10,9 @@
         <hr class="my-4">
         <h5>todo</h5>
         <ul>
-            <li>cookie设置方法</li>
-            <li>数据库相关重写</li>
             <li>修改头像(文件上传缩略图功能)(重写)</li>
-            <li>模板逻辑重构</li>
+            <li>权限管理RABC</li>
+            <li>注册请求的数据库还没调整好</li>
         </ul>
         <a class="btn btn-primary btn-lg" href="vscode:" role="button">Just do it</a>
       </div>

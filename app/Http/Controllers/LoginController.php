@@ -166,7 +166,7 @@ class LoginController extends Controller
                     $res = Web::get($state);
                     $array = $res->toArray();
                     session()->put('logined', $array);
-                    return "success";
+                    return response()->json(["success"=>['code'=>'101','message'=>'Success login!(Phone)', 'avatar_url'=>$array['avatar_url']]]);
             }else{
                 return "error";
             }
@@ -183,7 +183,7 @@ class LoginController extends Controller
                 $res = Web::get($state);
                 $array = $res->toArray();
                 session()->put('logined', $array);
-                return "success";
+                return response()->json(["success"=>['code'=>'102','message'=>'Success login!(Email)', 'avatar_url'=>$array['avatar_url']]]);
             }else return "error";
         }
     }
@@ -291,7 +291,7 @@ class LoginController extends Controller
                     return response()->json(["error"=>['code'=>'005','Database exception!']]);
                 }
             }
-            return response()->json(["success"=>['code'=>'101','message'=>'Success login!']]);
+            return response()->json(["success"=>['code'=>'101','message'=>'Success login!', 'avatar_url'=>$array['avatar_url']]]);
         }else{
             return response()->json(["error"=>['code'=>'006','message'=>'user or password is error!']]);
         }

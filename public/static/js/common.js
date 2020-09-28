@@ -221,10 +221,9 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    location.reload(true)
-                    logined()
                     $("#reg2-reset").click();
                     $("#reg-password").removeClass("is-invalid is-valid");
+                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
                 }
             },error: ()=>{
                 $("body").append(`
@@ -314,7 +313,7 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    setTimeout(location.reload(true), 1000)
+                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
                 }
             },
             error: ()=>{

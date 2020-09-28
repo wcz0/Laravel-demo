@@ -17,7 +17,8 @@
 <body>
     <!-- nav -->
     <!-- loging & register  -->
-    @include('common.nav')
+
+    @include('common.nav')  
     @include('common.reglogin')
     @section('reglogin')
     
@@ -39,40 +40,24 @@
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
     <script src="{{ asset('static/js/common.js') }}"></script>
     @section('js')
-    
-    @show
-    <script>
-        function logined(){
-            $.ajax({
-                type: "POST",
-                url: $("#login-btn").attr("data-purl"),
-                success: data=>{
-                    if(data.error.code){
-                        $("#login-btn").attr("onclick", "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='__ROOT__/{$data.avatar_url}avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
-                    }else{
-                        $("#login-btn").removeAttr("onclick").attr('data-togle', 'modal').html("登录").removeClass("p-0")
-                    };
-                }
-            })
-        }
-        $(document).ready(function(){
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            logined()
-            $("#index-page").addClass("active")
-            $.ajax({
-                type: "POST",
-                url: "{{ url('login/cookieLogin') }}",
-                success: data=>{
-                    if(data.success){
-                        location.reload()
+        <script>
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('login/cookieLogin') }}",
+                    success: data=>{
+                        if(data.success){
+                            location.reload()
+                        }
+                    }
+                })
             })
-        })
-    </script>
+        </script>
+    @show
 </body>
 </html>
