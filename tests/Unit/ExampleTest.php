@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Illuminate\Support\Facades\DB;
-use App\Models\Web;
 
 
 class ExampleTest extends TestCase
@@ -16,7 +15,6 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        dump(DB::select('select * from web'));
-        
+        $this->assertTrue(true);
     }
 }
