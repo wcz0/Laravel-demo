@@ -1,12 +1,14 @@
 @extends('common.userinfo')
-
+@section('title')
+修改头像
+@endsection
 @section('profile-content')
 <div class="container bg-light shadow-sm">
         <div class="row-cols-1 py-2">
             <h4>当前的头像</h4>
             <small>如果您还没有设置自己的头像，系统会显示为默认头像，您需要自己上传一张新照片来作为自己的个人头像</small>
             <div class="my-4" style="max-width:200px;height:200px">
-                <img class="border border-dark" style="width: 100%;height: auto;" src="__ROOT__/{$data.avatar_url}avatar_200.jpg" alt="头像">
+                <img class="border border-dark" style="width: 100%;height: auto;" src="{{ asset($data['avatar_url']. 'avatar_200.jpg') }}" alt="头像">
             </div>
         </div>
         <div class="row-cols-1">
@@ -21,7 +23,7 @@
                     <div class="invalid-feedback"></div>
                 </div>
                 <div class="text-center col-6 pb-4">
-                    <button id="avatar-upload" class="btn btn-primary col-3 text-center" type="submit" data-purl="{:url('@index/profile/avatarUpload')}">上传</button>
+                    <button id="avatar-upload" class="btn btn-primary col-3 text-center" type="submit" data-purl="{{url('profile/avatarUpload')}}">上传</button>
                 </div>
             </form> 
         </div>
@@ -46,5 +48,5 @@
         </div>
         </div>
     </div>
-
+    <img src="{{asset('avatar/default_200_200.jpg')}}" alt="">
 @endsection

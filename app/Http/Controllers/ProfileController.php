@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Web;
+use App\Http\Controllers\Image;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
     public function updateSession($array)
     {
         $web=Web::find($array['id']);
-        return $web->toArray();
+        $data = $web->toArray();
+        session('logined', $data);
+        return $data;
     }
 
     /**
@@ -58,10 +62,11 @@ class ProfileController extends Controller
     public function account()
     {
         $data=$this->updateSession(session()->get('logined'));
-        $this->assign('title', '账号安全');
-        $this->assign('menus', $this->checkRole());
-        $this->assign('data', $data);
-        return view();
+        
+        return view('profile.account', [
+            'title' => '账号安全',
+            'data' => $data
+        ]);
     }
     
 
@@ -125,9 +130,32 @@ class ProfileController extends Controller
     {
         $file = $request->file('image');
         $data = session()->get('logined');
+
+        if($file->isValid()){
+            $ext = $file->extension();
+            if($ext == "jpeg" || $ext == "png"){
+                $filename = $file->store('private/files/avatarsHistory/');
+
+                $image = Image::open($file);
+                
+                return $filename;
+
+                // return response()->json(['success'=>['code'=>'102', 'message'=>$ext]]);
+            }else{
+                return response()->json(['error'=>['code'=>'002', 'message'=>'The file is not in picture format.', 'ext'=>$ext]]);
+            }
+            return response()->json(['success'=>['code'=>'101', 'message'=>$ext]]);
+        }else{
+            return response()->json(['error'=>['code'=>'001', 'message'=>'File is empty']]);
+
+        }
+        
+        
+
         if($file){
             $info = $file->validate(['ext'=>'jpg,jpeg,png', 'type'=>'image/png,image/jpeg'])->move(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatarsHistory'. DS, time());
             if($info){
+
                 $image = Image::open($info);
                 try{
                 $info2 = $image->thumb(200, 200, 2)->save(ROOT_PATH . 'public' . DS . 'files'. DS. 'uploads'. DS. $data['username']. DS. 'avatar_200.jpg');

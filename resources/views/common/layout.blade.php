@@ -39,8 +39,7 @@
     <script src="{{ asset('static/js/popper.min.js') }}"></script>
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
     <script src="{{ asset('static/js/common.js') }}"></script>
-    @section('js')
-        <script>
+    <script>
             $(document).ready(function(){
                 $.ajaxSetup({
                     headers: {
@@ -58,6 +57,8 @@
                 })
             })
         </script>
+    @section('js')
+        
     @show
 </body>
 </html>

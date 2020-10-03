@@ -54,23 +54,4 @@
 
 @section('js')
     <script src="{{ asset('static/js/profile.js') }}"></script>
-    <script>
-            $(document).ready(function(){
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $("#index-page").addClass("active")
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('login/cookieLogin') }}",
-                    success: data=>{
-                        if(data.success){
-                            location.reload()
-                        }
-                    }
-                })
-            })
-        </script>
 @endsection

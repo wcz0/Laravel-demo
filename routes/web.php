@@ -44,7 +44,7 @@ Route::middleware('checksession')->prefix('profile')->group(function(){
     Route::get('profile/{op?}', [ProfileController::class, 'profile']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('account', [ProfileController::class, 'account']);
-    Route::get('avatar', [ProfileController::class, 'avatar']);
+    Route::post('avatarUpload', [ProfileController::class, 'avatarUpload']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('avatar', [ProfileController::class, 'avatar']);
     Route::get('avatar', [ProfileController::class, 'avatar']);

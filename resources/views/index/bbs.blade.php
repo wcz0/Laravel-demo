@@ -4,9 +4,7 @@
 @section('title')
 论坛
 @endsection
-@section('nav')
-    @parent
-@endsection
+
 @section('maintext')
 <div class="container">
         <div class="jumbotron my-4">
