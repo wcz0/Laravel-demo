@@ -39,6 +39,9 @@
                             <input type="checkbox" class="form-check-input" id="login_state" >
                             <label class="form-check-label" for="login_state">7天内自动登录</label>
                         </div>
+                        <div class="form-group">
+                            <small class="pr-2">使用其他账号登录:</small><a class="btn btn-primary btn-sm oauth-login" href="#" data-login-url="{{url('login/qqLogin')}}" ><img class="pr-1" src="{{asset('static/images/icons/Connect_logo_1.png')}}">使用QQ登录</a>
+                        </div>
                         <small class="mt-2 mb-3 form-text text-muted">还没注册?<a href="#reg" onclick="document.getElementById('reg-tab').click()">点击注册</a></small>
                         <button id="login" type="submit" class="btn btn-primary btn-block mb-2" data-purl="{{url('login/login')}}">登录</button>
                         <button id="login-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
@@ -75,6 +78,9 @@
                             <input type="checkbox" class="form-check-input" id="reg-license">
                             <label class="form-check-label" for="reg-license">同意注册协议</label>
                             <div class="invalid-feedback">你必须同意注册协议</div>
+                        </div>
+                        <div class="form-group">
+                            <small class="pr-2">使用其他账号登录:</small><a class="btn btn-primary btn-sm oauth-login" href="#" data-login-url="{{url('login/qqLogin')}}"  ><img class="pr-1" src="{{asset('static/images/icons/Connect_logo_1.png')}}">使用QQ登录</a>
                         </div>
                         <button id="reg-submit" type="submit" class="btn btn-primary btn-block mb-2" data-target="#staticBackdrop" data-purl="{{url('login/register')}}">注册</button>
                         <button id="reg-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>

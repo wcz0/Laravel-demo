@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Web;
-use Illuminate\Support\Facades\DB;
-use Cookie;
-use Session;
+use App\Http\Controllers\SendEmail;
+use App\Http\Controllers\sendSms;
+use Illuminate\Support\Facades\Cookie;
+
+use Exception;
+use Oauth;
+
 
 class LoginController extends Controller
 {
@@ -344,6 +348,17 @@ class LoginController extends Controller
     }
 
     /**
+     * qq登录请求
+     * 
+     */
+    public function qqLogin()
+    {
+        require_once 'qqapi/qqConnectAPI.php';
+        $oauth = new Oauth();
+        $oauth->qq_login();
+    }
+
+    /**
      * @return string 随机码
      */
     public function code()
@@ -357,12 +372,5 @@ class LoginController extends Controller
         return $code;
     }
 
-    public function test()
-    {
-        Session::put('key', 1112);
-    }
-    public function test1()
-    {
-        return session('verify_code');
-    }
+
 }

@@ -1,4 +1,4 @@
-@extends('common.layout')
+@extends('index.layout')
 
 @section('title')
 关于我们

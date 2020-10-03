@@ -110,7 +110,8 @@ $(document).ready(function(){
                 'qq' : $("#qq").val()
             },
             success: data=>{
-                if(data=="success"){
+                console.log(data.success)
+                if(data.success){
                     $("body").append(`
                         <div class="alert alert-success alert-dismissible fade show fixed-top text-center" role="alert">
                             <strong>保存成功!</strong>
@@ -178,9 +179,9 @@ $(document).ready(function(){
             processData : false,
             contentType : false,
             success: data=>{
-                if(data=="success"){
+                if(data.success){
                     $("#staticBackdrop").modal('show')
-                }else if(data=="error2"){
+                }else if(data.error.code=='003'){
                     $("body").append(`
                         <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
                             <strong>上传失败!</strong>格式类型错误, 只允许jpg/png格式
@@ -189,7 +190,7 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                }else if(data=="error"){
+                }else if(data.error.code){
                     $("body").append(`
                         <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
                             <strong>上传失败!</strong>文件太大

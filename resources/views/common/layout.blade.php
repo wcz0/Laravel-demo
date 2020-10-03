@@ -19,7 +19,6 @@
     <!-- loging & register  -->
 
     @include('common.nav')  
-    @include('common.reglogin')
     @section('reglogin')
     
     @show
@@ -38,14 +37,16 @@
     <script src="{{ asset('static/js/jquery-3.5.1.min.js') }}"></script>
     <script src="{{ asset('static/js/popper.min.js') }}"></script>
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('static/js/common.js') }}"></script>
+    @section('js')
+        
+    @show
     <script>
             $(document).ready(function(){
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
-                });
+                })
                 $.ajax({
                     type: "POST",
                     url: "{{ url('login/cookieLogin') }}",
@@ -55,10 +56,12 @@
                         }
                     }
                 })
+                $(".oauth-login").click(function(){
+                    var url = $(this).data("login-url")
+                    window.screenLeft
+                    window.open(url, '_blank', "top=100, left=400, toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=800, height=600")
+                })
             })
         </script>
-    @section('js')
-        
-    @show
 </body>
 </html>

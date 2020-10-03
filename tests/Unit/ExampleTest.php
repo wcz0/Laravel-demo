@@ -16,5 +16,6 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
         $this->assertTrue(true);
+        return Web::find(session()->get('logined')['id'])->toArray();
     }
 }

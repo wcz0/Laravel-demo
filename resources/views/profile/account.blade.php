@@ -1,4 +1,4 @@
-@extends('common.userinfo')
+@extends('profile.layout')
 @section('title')
 账户安全
 @endsection

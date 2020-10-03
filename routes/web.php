@@ -26,6 +26,8 @@ Route::get('contact', [IndexController::class, 'contact']);
 
 Route::get('logout', [IndexController::class, 'logout']);
 Route::any('checkLogined', [IndexController::class, 'checkLogined']);
+Route::any('updateData', [IndexController::class, 'updateData']);
+
 
 Route::prefix('login')->group(function(){
     Route::post('cookieLogin', [LoginController::class, 'cookieLogin']);
@@ -33,7 +35,7 @@ Route::prefix('login')->group(function(){
     Route::post('register', [LoginController::class, 'register']);
     Route::post('register2', [LoginController::class, 'register2']);
     Route::post('sendCodeSmsEmail', [LoginController::class, 'sendCodeSmsEmail']);
-
+    Route::get('qqLogin', [LoginController::class, 'qqLogin']);
     Route::post('login', [LoginController::class, 'login']);
     Route::get('verify', [LoginController::class, 'verify']);
     Route::any('test', [LoginController::class, 'test']);

@@ -9,7 +9,7 @@
 // | Author: yunwuxin <448901948@qq.com>
 // +----------------------------------------------------------------------
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Gif;
 
 class Gif
 {

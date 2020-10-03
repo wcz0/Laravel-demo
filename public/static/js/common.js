@@ -313,7 +313,7 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
+                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"_38_38.jpg'>").addClass("p-0").removeClass("btn-block")
                 }
             },
             error: ()=>{

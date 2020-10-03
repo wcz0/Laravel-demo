@@ -1,4 +1,4 @@
-@extends('common.userinfo')
+@extends('profile.layout')
 @section('title')
 修改头像
 @endsection
@@ -8,7 +8,7 @@
             <h4>当前的头像</h4>
             <small>如果您还没有设置自己的头像，系统会显示为默认头像，您需要自己上传一张新照片来作为自己的个人头像</small>
             <div class="my-4" style="max-width:200px;height:200px">
-                <img class="border border-dark" style="width: 100%;height: auto;" src="{{ asset($data['avatar_url']. 'avatar_200.jpg') }}" alt="头像">
+                <img class="border border-dark" style="width: 100%;height: auto;" src="{{ asset($data['avatar_url']. '_200_200.jpg') }}" alt="头像">
             </div>
         </div>
         <div class="row-cols-1">
@@ -35,7 +35,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">提示</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='{:url(\'@index/profile/avatar\')}?id='+Math.random()">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='{{ url('profile/avatar')}}?id='+Math.random()">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -43,10 +43,9 @@
                 <p>图片上传成功</p>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='{:url(\'@index/profile/avatar\')}?id='+Math.random()">完成</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='{{url('profile/avatar')}}?id='+Math.random()">完成</button>
             </div>
         </div>
         </div>
     </div>
-    <img src="{{asset('avatar/default_200_200.jpg')}}" alt="">
 @endsection

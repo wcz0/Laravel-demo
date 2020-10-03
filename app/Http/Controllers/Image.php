@@ -11,8 +11,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Gif;
-use App\Exceptions\CustomException;
+use App\Http\Controllers\Gif\Gif;
 
 
 class Image
@@ -63,7 +62,7 @@ class Image
 
         //检测图像合法性
         if (false === $info || (IMAGETYPE_GIF === $info[2] && empty($info['bits']))) {
-            throw new Exception('Illegal image file');
+            throw new \Exception('Illegal image file');
         }
 
         //设置图像信息
@@ -84,7 +83,7 @@ class Image
         }
 
         if (empty($this->im)) {
-            throw new Exception('Failed to create image resources!');
+            throw new \Exception('Failed to create image resources!');
         }
 
     }
@@ -100,7 +99,7 @@ class Image
             $file = new \SplFileInfo($file);
         }
         if (!$file->isFile()) {
-            throw new Exception('image file not exist');
+            throw new \Exception('image file not exist');
         }
         return new self($file);
     }
@@ -125,14 +124,14 @@ class Image
         if ('jpeg' == $type || 'jpg' == $type) {
             //JPEG图像设置隔行扫描
             imageinterlace($this->im, $interlace);
-            imagejpeg($this->im, $pathname, $quality);
+            imagejpeg($this->im, $pathname. '.'. $type, $quality);
         } elseif ('gif' == $type && !empty($this->gif)) {
             $this->gif->save($pathname);
         } elseif ('png' == $type) {
             //设定保存完整的 alpha 通道信息
             imagesavealpha($this->im, true);
             //ImagePNG生成图像的质量范围从0到9的
-            imagepng($this->im, $pathname, min((int) ($quality / 10), 9));
+            imagepng($this->im, $pathname. '.'. $type, min((int) ($quality / 10), 9));
         } else {
             $fun = 'image' . $type;
             $fun($this->im, $pathname);
@@ -232,7 +231,7 @@ class Image
                     }
                     break;
                 default:
-                    throw new Exception('不支持的翻转类型');
+                    throw new \Exception('不支持的翻转类型');
             }
 
             imagedestroy($this->im);
@@ -369,7 +368,7 @@ class Image
                 $x = $y = 0;
                 break;
             default:
-                throw new Exception('不支持的缩略图裁剪类型');
+                throw new \Exception('不支持的缩略图裁剪类型');
         }
         /* 裁剪图像 */
         return $this->crop($w, $h, $x, $y, $width, $height);
@@ -386,12 +385,12 @@ class Image
     public function water($source, $locate = self::WATER_SOUTHEAST, $alpha = 100)
     {
         if (!is_file($source)) {
-            throw new Exception('水印图像不存在');
+            throw new \Exception('水印图像不存在');
         }
         //获取水印图像信息
         $info = getimagesize($source);
         if (false === $info || (IMAGETYPE_GIF === $info[2] && empty($info['bits']))) {
-            throw new Exception('非法水印文件');
+            throw new \Exception('非法水印文件');
         }
         //创建水印图像资源
         $fun   = 'imagecreatefrom' . image_type_to_extension($info[2], false);
@@ -449,7 +448,7 @@ class Image
                 if (is_array($locate)) {
                     list($x, $y) = $locate;
                 } else {
-                    throw new Exception('不支持的水印位置类型');
+                    throw new \Exception('不支持的水印位置类型');
                 }
         }
         do {
@@ -487,7 +486,7 @@ class Image
         $locate = self::WATER_SOUTHEAST, $offset = 0, $angle = 0) {
 
         if (!is_file($font)) {
-            throw new Exception("不存在的字体文件：{$font}");
+            throw new \Exception("不存在的字体文件：{$font}");
         }
         //获取文字信息
         $info = imagettfbbox($size, $angle, $font, $text);
@@ -549,7 +548,7 @@ class Image
                     $x += $posx;
                     $y += $posy;
                 } else {
-                    throw new Exception('不支持的文字位置类型');
+                    throw new \Exception('不支持的文字位置类型');
                 }
         }
         /* 设置偏移量 */
@@ -568,7 +567,7 @@ class Image
                 $color[3] = 0;
             }
         } elseif (!is_array($color)) {
-            throw new Exception('错误的颜色值');
+            throw new \Exception('错误的颜色值');
         }
         do {
             /* 写入文字 */

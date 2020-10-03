@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\Response;
-use Cookie;
+use App\Models\Web;
+use Illuminate\Support\Facades\Cookie;
 
 class IndexController extends Controller
 {
@@ -14,7 +13,7 @@ class IndexController extends Controller
         return view('index.index');
     }
 
-    public function about(Request $request)
+    public function about()
     {
         return view('index.about');
     }
@@ -26,8 +25,13 @@ class IndexController extends Controller
 
     public function contact()
     {
-        return view('index.contact');
-    }
+        if(session()->has('logined')){
+            return view('index.contact', [
+                'data' => $this->updateData()
+            ]);
+        }else{
+            return view('index.contact');
+        }    }
 
     public function checkLogined()
     {
@@ -38,21 +42,16 @@ class IndexController extends Controller
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         session()->flush();
-        Cookie::queue('login_token', '');
+        Cookie::queue(Cookie::forget('login_token'));
         return redirect('/');
     }
 
-    public function checkSession()
+    public function updateData()
     {
-        if(!session()->has('logined')){
-            $data = session()->get('logined');
-            $this->assign('data', $data);
-        }else  $this->assign('data', ['avatar_url'=>null]);
+        return Web::find(session()->get('logined')['id'])->toArray();
     }
-
-    
     
 }

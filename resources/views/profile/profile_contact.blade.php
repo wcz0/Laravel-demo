@@ -1,4 +1,4 @@
-@extends('common.userinfo')
+@extends('profile.layout')
 
 @section('profile-content')
 <div class="container py-3">
