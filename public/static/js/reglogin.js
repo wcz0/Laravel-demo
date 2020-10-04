@@ -109,11 +109,12 @@ $(document).ready(function(){
                             </button>
                         </div>
                         `);
+                        
                     }
                 }else{
                     $("#feedback-phone-email").text(data.success.text);
                     time($("#resend"));
-                    $("#reg-reset").click();
+                    $("#reg-reset").click()
                     $("#code").removeClass("is-invalid is-valid");
                     $("#reg-phone-email").removeClass("is-invalid is-valid");
                     $("#reg-license").removeClass("is-invalid is-valid");
@@ -130,11 +131,12 @@ $(document).ready(function(){
                         </button>
                     </div>
                   `);
+                  $("#reg-reset").click()
             }
         })
 
         $("#code-img").click();
-        $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请修改验证码");
+        // $("#code").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("请修改验证码");
         return false;
     })
 
@@ -162,6 +164,7 @@ $(document).ready(function(){
             type: "POST",
             url: $(this).attr("data-purl"),
             error: ()=>{
+                $(".close").click()
                 $("body").append(`
                     <div class="alert alert-danger alert-dismissible fade show fixed-top text-center" role="alert">
                         <strong>服务器错误!</strong>请联系管理员
@@ -207,7 +210,8 @@ $(document).ready(function(){
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                  `);
+                  `)
+                  $("#reg-reset").click()
                 }else if(data=="error2"){
                     $("#reg-password").removeClass("is-valid").addClass("is-invalid").siblings(".invalid-feedback").text("密码强度不符合要求, 请输入8-20位字母/数字/符号,至少包含两种的密码");
                 }else if(data=="error1"){
@@ -221,9 +225,9 @@ $(document).ready(function(){
                             </button>
                         </div>
                     `);
-                    $("#reg2-reset").click();
+                    $("#reg2-reset").click()
                     $("#reg-password").removeClass("is-invalid is-valid");
-                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"avatar_38.jpg'>").addClass("p-0").removeClass("btn-block")
+                    $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"_38_38.jpg'>").addClass("p-0").removeClass("btn-block")
                 }
             },error: ()=>{
                 $("body").append(`
@@ -234,6 +238,8 @@ $(document).ready(function(){
                         </button>
                     </div>
                   `);
+                  $("#reg-reset2").click()
+
             }
         })
     })

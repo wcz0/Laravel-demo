@@ -16,11 +16,8 @@
 </head>
 <body>
     <!-- nav -->
-    <!-- loging & register  -->
+    @include('common.nav')
 
-    @include('common.nav')  
-    @section('reglogin')
-    
     @show
     
 
@@ -38,7 +35,7 @@
     <script src="{{ asset('static/js/popper.min.js') }}"></script>
     <script src="{{ asset('static/js/bootstrap.js') }}"></script>
     @section('js')
-        
+
     @show
     <script>
             $(document).ready(function(){
@@ -49,10 +46,10 @@
                 })
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('login/cookieLogin') }}",
+                    url: "{{url('login/cookieLogin')}}",
                     success: data=>{
                         if(data.success){
-                            location.reload()
+                            $('#login-btn').attr('onclick', "window.location.href='"+$("#login-btn").attr("data-url")+"'").removeAttr("data-toggle").html("<img style='max-width:38px;height:auto' src='"+data.success.avatar_url+"_38_38.jpg'>").addClass("p-0").removeClass("btn-block")
                         }
                     }
                 })

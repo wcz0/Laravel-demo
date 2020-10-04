@@ -122,10 +122,10 @@
                 </div>
                 <div class="form-group">
                     <label for="reg-password">密码</label>
-                    <input type="password" class="form-control" id="reg-password" placeholder="请输入8-20位字母/数字/符号,至少包含两种的密码" data-purl="{:url('login/register2')}"/>
+                    <input type="password" class="form-control" id="reg-password" placeholder="请输入8-20位字母/数字/符号,至少包含两种的密码"/>
                     <div class="invalid-feedback"></div>
                 </div>
-                <button id="reg-submit2" type="submit" class="btn btn-primary btn-block mb-2 mt-4" data-dismiss="modal" data-purl="{:url('@index/login/register2')}">完成</button>
+                <button id="reg-submit2" type="submit" class="btn btn-primary btn-block mb-2 mt-4" data-dismiss="modal" data-purl="{{url('login/register2')}}">完成</button>
                 <button id="reg2-reset" type="reset" class="invisible position-absolute" aria-hidden="true"></button>
             </form>
         </div>

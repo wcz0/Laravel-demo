@@ -39,7 +39,6 @@ Route::prefix('login')->group(function(){
     Route::post('login', [LoginController::class, 'login']);
     Route::get('verify', [LoginController::class, 'verify']);
     Route::any('test', [LoginController::class, 'test']);
-    Route::any('test1', [LoginController::class, 'test1']);
 });
 
 Route::middleware('checksession')->prefix('profile')->group(function(){

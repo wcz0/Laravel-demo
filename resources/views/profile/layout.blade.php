@@ -7,11 +7,6 @@
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="Cache" content="no-cache">
 @endsection
-@section('title')
-个人信息
-@endsection
-
-
 
 @section('maintext')
     <div class="container-xl">

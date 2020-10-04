@@ -1,5 +1,9 @@
 @extends('profile.layout')
 
+@section('title')
+个人资料
+@endsection
+
 @section('profile-content')
 <div class="container py-3">
     <nav class="nav nav-pills nav-fill">

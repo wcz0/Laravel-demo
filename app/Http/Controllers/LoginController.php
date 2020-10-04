@@ -7,13 +7,17 @@ use App\Models\Web;
 use App\Http\Controllers\SendEmail;
 use App\Http\Controllers\sendSms;
 use Illuminate\Support\Facades\Cookie;
-
 use Exception;
 use Oauth;
 
 
 class LoginController extends Controller
 {
+    /**
+     * 验证码图片
+     *
+     * @return 输出图片
+     */
     public function verify()
     {     
         $captcha = new Captcha();
@@ -111,7 +115,9 @@ class LoginController extends Controller
     {
         if(session()->get('reg_state')){
             $this->sendCodeSms();
-        }else $this->sendCodeSmsEmail();
+        }else{
+            $this->sendCodeEmail();
+        }
     }
 
     /**
@@ -147,48 +153,48 @@ class LoginController extends Controller
     public function register2(Request $request)
     {
         if(!$request->has('code')){
-            return "error";
+            return response()->json(["error"=>['code'=>'001','message'=>'code is null!']]);
         }
         if(!$request->has('password')){
-            return "error";
+            return response()->json(["error"=>['code'=>'002','message'=>'password is null!']]);
         }
         $code = $request->input('code');
         $p = $request->input('password');
         if(!((strlen($p)>7&&strlen($p)<21)&&((preg_match('/\d/', $p)&&preg_match('/[a-zA-Z]/', $p))||(preg_match('/[a-zA-Z]/', $p)&&preg_match('/\W/', $p))||(preg_match('/\d/', $p)&&preg_match('/\W/', $p))))){
-            return "error2";
+            return response()->json(["error"=>['code'=>'003','message'=>'The password is too simple!']]);
         }
         if(session()->get('reg_state')){
             if(session()->has('sms_code')||session()->has('phone')){
-                return "error";
+                return response()->json(["error"=>['code'=>'004','message'=>'sms_code or phone is empty!']]);
             }
             if($code!=session()->get('sms_code')){
-                return "error1";
+                return response()->json(["error"=>['code'=>'005','message'=>'The verification code is incorrect!']]);
             }
             $phone = session()->get('phone');
             $state = $this->regCreatePhone($phone, $p);
             if($state!=0){
-                    $res = Web::get($state);
-                    $array = $res->toArray();
+                    $array = Web::find($state)->toArray();
                     session()->put('logined', $array);
                     return response()->json(["success"=>['code'=>'101','message'=>'Success login!(Phone)', 'avatar_url'=>$array['avatar_url']]]);
             }else{
-                return "error";
+                return response()->json(["error"=>['code'=>'006','message'=>'Server is incorrect!']]);
             }
         }else{
             if(session()->get('email_code')==null||session()->get('email')==null){
-                return 'error';
+                return response()->json(["error"=>['code'=>'007','message'=>'The verification code is incorrect!!']]);
             }
             if($code!=session()->get('email_code')){
-                return "error1";
+                return response()->json(["error"=>['code'=>'008','message'=>'The verification code is incorrect!!']]);
             }
             $email = session()->get('email');
             $state = $this->regCreateEmail($email, $p);
             if($state!=0){
-                $res = Web::get($state);
-                $array = $res->toArray();
+                $array = Web::find($state)->toArray();
                 session()->put('logined', $array);
                 return response()->json(["success"=>['code'=>'102','message'=>'Success login!(Email)', 'avatar_url'=>$array['avatar_url']]]);
-            }else return "error";
+            }else{ 
+                return response()->json(["error"=>['code'=>'009','message'=>'Server is incorrect!']]);
+            };
         }
     }
     
@@ -212,15 +218,11 @@ class LoginController extends Controller
         $user->username = $username;
         $user->password = md5($passwd);
         $user->phone = $phone;
-        try{
-            if($user->save()){
-                return $user->id;
-            }else{
-                return 0;
-            }
-        }catch(Exception $e){
+        if($user->save()){
+            return $user->id;
+        }else{
             return 0;
-        }
+        };
         
     }
 
@@ -244,13 +246,9 @@ class LoginController extends Controller
         $user->username = $username;
         $user->password = md5($passwd);
         $user->email = $email;
-        try{
-            if($user->save()){
-                return $user->id;
-            }else return 0;
-        }catch(Exception $e){
-            return 0;
-        }
+        if($user->save()){
+            return $user->id;
+        }else return 0;
         
     }
 
@@ -332,17 +330,13 @@ class LoginController extends Controller
                         Cookie::queue('last_login_username', $login, 10080);
                         Cookie::queue("login_token", $code, 10080);
                         Cookie::queue("loginstate", 1, 10080);
-                        try{
-                            $user = Web::find($array['id']);
-                            $user->login_token = $code;
-                            $user->save();
-                        }catch(Exception $e){
-                            return response()->json(['error'=>['code'=>'004', 'message'=>'Database exception']]);
-                        }
+                        $user = Web::find($array['id']);
+                        $user->login_token = $code;
+                        $user->save();
                     }
                 }
                 session()->put('logined', $array);
-                return response()->json(['success'=>['code'=>'101', 'message'=>'Database exception']]);
+                return response()->json(['success'=>['code'=>'101', 'message'=>'You\'re logged in automatically', 'avatar_url' => $array['avatar_url']]]);
             }
         }
     }
@@ -371,6 +365,5 @@ class LoginController extends Controller
         }
         return $code;
     }
-
 
 }

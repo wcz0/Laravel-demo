@@ -5,7 +5,9 @@
 论坛
 @endsection
 
+
 @section('maintext')
+@parent
 <div class="container">
         <div class="jumbotron my-4">
             <h1 class="display-4">功能还在施工中...</h1>

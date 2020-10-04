@@ -1,4 +1,5 @@
 @extends('profile.layout')
+
 @section('title')
 修改头像
 @endsection

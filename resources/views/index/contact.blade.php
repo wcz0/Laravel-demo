@@ -5,7 +5,9 @@
 联系我们
 @endsection
 
+
 @section('maintext')
+    @parent
     <div class="container">
         <div class="jumbotron my-4">
             <h1 class="display-4">联系我们</h1>

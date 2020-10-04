@@ -2,8 +2,15 @@
 
 namespace Tests\Unit;
 
+use App\Http\Controllers\LoginController;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Web;
+use App\Http\Controllers\SendEmail;
+use App\Http\Controllers\sendSms;
+use Illuminate\Support\Facades\Cookie;
+use Exception;
+use Oauth;
 
 
 class ExampleTest extends TestCase
@@ -15,7 +22,7 @@ class ExampleTest extends TestCase
      */
     public function testBasicTest()
     {
-        $this->assertTrue(true);
-        return Web::find(session()->get('logined')['id'])->toArray();
+        // $this->assertTrue(true);
+        $lc = new LoginController;
     }
 }
