@@ -36,7 +36,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">提示</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.href='{{ url('profile/avatar')}}?id='+Math.random()">
+                <button type="button" id="close-btn" class="close" data-dismiss="modal" aria-label="Close" data-url="{{url('profile/avatar')}}">
                   <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -44,7 +44,7 @@
                 <p>图片上传成功</p>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='{{url('profile/avatar')}}?id='+Math.random()">完成</button>
+                <button type="button" id="close-btn2" class="btn btn-primary" data-dismiss="modal" data-url="{{url('profile/avatar')}}">完成</button>
             </div>
         </div>
         </div>

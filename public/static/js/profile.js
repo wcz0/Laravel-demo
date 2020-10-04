@@ -155,6 +155,13 @@ $(document).ready(function(){
     })
     
     //avatar.html
+    $("#close-btn").click(function(){
+        window.location.href=$(this).data('url')+'?id='+Math.random()
+    })
+    $("#close-btn2").click(function(){
+        window.location.href=$(this).data('url')+'?id='+Math.random()
+
+    })
     var avatarFlag=0
     $("#avatar").change(function(){
         if($("#avatar").val()==null){
