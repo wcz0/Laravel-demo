@@ -1,2 +1,0 @@
-<?php die('forbidden'); ?>
-{"appid":"101892739","appkey":"4a510280fcd8e46e68796fa4c9e79c50","callback":"http://wcz0.net/test","scope":"get_user_info","errorReport":true,"storageType":"file","host":"localhost","user":"root","password":"root","database":"test"}

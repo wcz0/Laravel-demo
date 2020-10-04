@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        SocialiteProviders\Manager\ServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -228,5 +228,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+    'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
 ];

@@ -54,4 +54,8 @@ class IndexController extends Controller
         return Web::find(session()->get('logined')['id'])->toArray();
     }
     
+    public function phpinfo()
+    {
+        return phpinfo();
+    }
 }

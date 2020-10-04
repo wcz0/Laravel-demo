@@ -8,8 +8,6 @@ use App\Http\Controllers\SendEmail;
 use App\Http\Controllers\sendSms;
 use Illuminate\Support\Facades\Cookie;
 use Exception;
-use Oauth;
-
 
 class LoginController extends Controller
 {
@@ -347,9 +345,12 @@ class LoginController extends Controller
      */
     public function qqLogin()
     {
-        require_once 'qqapi/qqConnectAPI.php';
-        $oauth = new Oauth();
-        $oauth->qq_login();
+        return \Socialite::with('qq')->redirect();
+    }
+
+    public function test()
+    {
+        return \Socialite::with('qq')->redirect();
     }
 
     /**

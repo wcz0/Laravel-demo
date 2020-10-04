@@ -56,6 +56,7 @@
                 $(".oauth-login").click(function(){
                     var url = $(this).data("login-url")
                     window.screenLeft
+                    // window.open(url, _self)
                     window.open(url, '_blank', "top=100, left=400, toolbar=yes, location=yes, directories=no, status=no, menubar=yes, scrollbars=yes, resizable=no, copyhistory=yes, width=800, height=600")
                 })
             })
