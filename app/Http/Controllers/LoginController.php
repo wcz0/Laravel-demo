@@ -345,10 +345,10 @@ class LoginController extends Controller
      */
     public function qqLogin()
     {
-        return \Socialite::with('qq')->redirect();
+        return Socialite::with('qq')->redirect();
     }
 
-    public function test()
+    public function qqcallback()
     {
         return \Socialite::with('qq')->redirect();
     }
