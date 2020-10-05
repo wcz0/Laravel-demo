@@ -7,6 +7,7 @@ use App\Models\Web;
 use App\Http\Controllers\SendEmail;
 use App\Http\Controllers\sendSms;
 use Illuminate\Support\Facades\Cookie;
+use Laravel\Socialite\Facades\Socialite;
 use Exception;
 
 class LoginController extends Controller
@@ -345,12 +346,12 @@ class LoginController extends Controller
      */
     public function qqLogin()
     {
-        return \Socialite::with('qq')->redirect();
+        return Socialite::with('qq')->redirect();
     }
 
     public function test()
     {
-        return \Socialite::with('qq')->redirect();
+        return Socialite::with('qq')->redirect();
     }
 
     /**
