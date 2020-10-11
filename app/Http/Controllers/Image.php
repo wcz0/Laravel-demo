@@ -13,7 +13,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Gif\Gif;
 
-
 class Image
 {
 
@@ -124,14 +123,21 @@ class Image
         if ('jpeg' == $type || 'jpg' == $type) {
             //JPEG图像设置隔行扫描
             imageinterlace($this->im, $interlace);
-            imagejpeg($this->im, $pathname. '.'. $type, $quality);
+
+            imagejpeg($this->im, $pathname, $quality);
+            
+            // Storage::put('file2.jpg', imagejpeg($this->im, null, $quality));
+            // $op = imagejpeg($this->im, null, $quality);
+            // Storage::put('file2.jpg', $op);
+            // return 1;
+
         } elseif ('gif' == $type && !empty($this->gif)) {
             $this->gif->save($pathname);
         } elseif ('png' == $type) {
             //设定保存完整的 alpha 通道信息
             imagesavealpha($this->im, true);
             //ImagePNG生成图像的质量范围从0到9的
-            imagepng($this->im, $pathname. '.'. $type, min((int) ($quality / 10), 9));
+            imagepng($this->im, $pathname, min((int) ($quality / 10), 9));
         } else {
             $fun = 'image' . $type;
             $fun($this->im, $pathname);

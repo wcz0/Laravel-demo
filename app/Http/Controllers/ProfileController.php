@@ -7,6 +7,7 @@ use App\Models\Web;
 use App\Http\Controllers\Image;
 use Exception;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -148,12 +149,14 @@ class ProfileController extends Controller
             $ext = $file->extension();
             if($ext == "jpeg" || $ext == "png"){
                 // 生成随机名
-                $name = bin2hex(random_bytes(20));
+                $name = Common::getRandCode(20, false);
 
                 // 裁剪头像并保存
                 $image = Image::open($file);
                 $image->thumb(200, 200, 2)->save('avatars/'. $name. '_200_200', 'jpg');
                 $image->thumb(38, 38, 2)->save('avatars/'. $name. '_38_38', 'jpg');
+
+
 
                 // 将头像url保存到数据库
                 $user = Web::find($data['id']);

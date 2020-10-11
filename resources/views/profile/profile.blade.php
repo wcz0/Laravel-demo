@@ -86,7 +86,7 @@
         </div>
         <div class="form-group row py-4">
             <div class="col text-center">
-              <button id="profile-save" type="submit" class="btn btn-primary" data-purl="{:url('@index/profile/profileSave')}">保存</button>
+              <button id="profile-save" type="submit" class="btn btn-primary" data-purl="{{url('profile/profileSave')}}">保存</button>
             </div>
           </div>
     </form>    

@@ -27,7 +27,7 @@ Route::get('contact', [IndexController::class, 'contact']);
 Route::get('logout', [IndexController::class, 'logout']);
 Route::any('checkLogined', [IndexController::class, 'checkLogined']);
 Route::any('updateData', [IndexController::class, 'updateData']);
-Route::any('test', [LoginController::class, 'test']);
+Route::get('qqcallback', [LoginController::class, 'qqcallback']);
 
 
 Route::prefix('login')->group(function(){
@@ -39,6 +39,8 @@ Route::prefix('login')->group(function(){
     Route::get('qqLogin', [LoginController::class, 'qqLogin']);
     Route::post('login', [LoginController::class, 'login']);
     Route::get('verify', [LoginController::class, 'verify']);
+    Route::any('test', [LoginController::class, 'test']);
+
 });
 
 Route::middleware('checksession')->prefix('profile')->group(function(){

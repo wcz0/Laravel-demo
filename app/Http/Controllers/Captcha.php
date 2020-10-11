@@ -90,7 +90,7 @@ class Captcha
         imagedestroy($image);
         // return strtolower($code);
         // exit();
-        }catch(Exception $e){
+        }catch(\Exception $e){
             echo $e;
         }
         

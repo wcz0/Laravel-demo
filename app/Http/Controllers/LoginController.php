@@ -7,6 +7,9 @@ use App\Models\Web;
 use App\Http\Controllers\SendEmail;
 use App\Http\Controllers\sendSms;
 use Illuminate\Support\Facades\Cookie;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class LoginController extends Controller
@@ -345,15 +348,71 @@ class LoginController extends Controller
      */
     public function qqLogin()
     {
-        return Socialite::with('qq')->redirect();
-    }
-
-    public function qqcallback()
-    {
-        return \Socialite::with('qq')->redirect();
+        return Socialite::driver('qq')->redirect();
     }
 
     /**
+     * qq接口回调地址
+     *
+     * @return void
+     */
+    public function qqcallback()
+    {
+        try {
+            $user = Socialite::driver('qq')->user();
+            $web = Web::firstWhere('qq_id', $user->id);
+            if($web){
+                session()->put('logined', $web->toArray());
+                echo <<< STR
+                    <script>
+                    window.onunload = function(){
+                        window.opener.location.reload()
+                    }
+                    window.onload = function(){
+                        if(/Android|webOS|iPhone|iPod|BlackBerry|MicroMessenger/.test(navigator.userAgent)) {
+                            window.location.href = 'http://wcz0.net/'
+                        }else{
+                            window.close()
+                        }
+                    }
+                    </script>
+                    STR;
+            }else{
+                // 注册过程
+                $web2 = new Web;
+                $web2->username = Common::getRandCode(8);
+                $web2->gender = ($user->user['gender']=='男')?1:2;
+                $web2->nickname = $user->nickname;
+                $web2->qq_id = $user->id;
+                if($web2->save()){
+                    session()->put('logined', Web::find($web2->id)->toArray());
+                    echo <<< STR
+                    <script>
+                    window.onunload = function(){
+                        window.opener.location.reload()
+                    }
+                    window.onload = function(){
+                        if(/Android|webOS|iPhone|iPod|BlackBerry|MicroMessenger/.test(navigator.userAgent)) {
+                            window.location.href = 'http://wcz0.net/'
+                        }else{
+                            window.close()
+                        }
+                    }
+                    </script>
+                    STR;
+                }else{
+                    abort(500, '服务器异常');
+                }
+            }
+        } catch (\Throwable $th) {
+            echo '<script>window.close()</script>';
+        }
+        
+    }
+
+    /**
+     * 生成一个随机码
+     * 
      * @return string 随机码
      */
     public function code()
@@ -367,4 +426,8 @@ class LoginController extends Controller
         return $code;
     }
 
+    public function test()
+    {
+        
+    }
 }
