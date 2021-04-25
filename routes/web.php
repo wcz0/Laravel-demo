@@ -1,11 +1,7 @@
 <?php
 
-
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\IndexController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Captcha;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,36 +15,9 @@ use App\Http\Controllers\Captcha;
 */
 
 
-Route::get('/', [IndexController::class, 'index']);
-Route::get('about', [IndexController::class, 'about']);
-Route::get('bbs', [IndexController::class, 'bbs']);
-Route::get('contact', [IndexController::class, 'contact']);
 
-Route::get('logout', [IndexController::class, 'logout']);
-Route::any('checkLogined', [IndexController::class, 'checkLogined']);
-Route::any('updateData', [IndexController::class, 'updateData']);
-Route::get('qqcallback', [LoginController::class, 'qqcallback']);
-
-
-Route::prefix('login')->group(function(){
-    Route::post('cookieLogin', [LoginController::class, 'cookieLogin']);
-    Route::post('checkCode', [LoginController::class, 'checkCode']);
-    Route::post('register', [LoginController::class, 'register']);
-    Route::post('register2', [LoginController::class, 'register2']);
-    Route::post('sendCodeSmsEmail', [LoginController::class, 'sendCodeSmsEmail']);
-    Route::get('qqLogin', [LoginController::class, 'qqLogin']);
-    Route::post('login', [LoginController::class, 'login']);
-    Route::get('verify', [LoginController::class, 'verify']);
-    Route::any('test', [LoginController::class, 'test']);
-
+Route::get('/', function(){
+    return view('welcome');
 });
 
-Route::middleware('checksession')->prefix('profile')->group(function(){
-    Route::get('profile/{op?}', [ProfileController::class, 'profile']);
-    Route::get('avatar', [ProfileController::class, 'avatar']);
-    Route::get('account', [ProfileController::class, 'account']);
-    Route::post('avatarUpload', [ProfileController::class, 'avatarUpload']);
-    Route::get('avatar', [ProfileController::class, 'avatar']);
-    Route::get('avatar', [ProfileController::class, 'avatar']);
-    Route::get('avatar', [ProfileController::class, 'avatar']);
-});
+Route::post('register', [RegisterController::class, 'register']);

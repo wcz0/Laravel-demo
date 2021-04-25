@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'PRC',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'zh_cn',
+    'locale' => 'zh_CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'zh_cn',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'zh_CN',
+    'faker_locale' => 'en_US',
 
     /*
     |--------------------------------------------------------------------------
@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        SocialiteProviders\Manager\ServiceProvider::class,
+
         /*
          * Application Service Providers...
          */
@@ -228,6 +228,5 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-    'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
 ];

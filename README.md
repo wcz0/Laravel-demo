@@ -1,4 +1,3 @@
-# Grizzly
+# GrizzlyCore-api
 
-This is the case site I used to learn about OAuth
-
+this GrizzlyCore api
