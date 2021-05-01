@@ -9,25 +9,20 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-    /**
-     * 生成token
-     *
-     * @param array $date
-     * @return string 
-     *
-     */
-    public function getToken(Array $data)
-    {
-        $date = json_encode($data);
-        $token = Crypt::encryptString($data);
-    }
 
     /**
      * 登录
-     * 
+     *
      */
     public function login(Request $request)
     {
+
+        return $this->getToken([
+            'uid' => 1,
+            'admin' => true,
+            'expired' => time() + 3600,
+        ]);
+
         $validator = Validator::make($request->all(), [
             'phone' => 'string|regex:/^1(3|4|5|6|7|8|9)\d{9}$/',
             'email' => 'string|email|required_without:phone',
@@ -36,6 +31,8 @@ class LoginController extends Controller
         if ($validator->fails()) {
             return $this->fail($validator->errors()->all());
         }
+
+
 
     }
 }

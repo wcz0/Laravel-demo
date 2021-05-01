@@ -2,22 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Psr7\Header;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Crypt;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+
+
+    public $token;
+
     public function __construct()
     {
-        // $token =
+        $this->token = header('Au');
 
     }
 
-
+    /**
+     * 生成token
+     *
+     * @param array $date
+     * @return string
+     *
+     */
+    public function getToken(Array $data)
+    {
+        $token = Crypt::encryptString(json_encode($data));
+        return $token;
+    }
 
 
     /**

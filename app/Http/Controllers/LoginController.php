@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\SendEmail;
 use App\Http\Controllers\sendSms;
+use App\Http\Tools\Common;
 use Illuminate\Support\Facades\Cookie;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -31,43 +33,43 @@ class LoginController extends Controller
         $login = $request->input('login_i');
         $passwd = $request->input('password');
 
-        // try{
-        //     $web = User::where('phone', $login)
-        //             ->orWhere('email', $login)
-        //             ->orWhere('username', $login)
-        //             ->first();
-        //     if(empty($web)){
-        //         return response()->json(["error"=>['code'=>'003','message'=>'User not found!']]);
-        //     }
+        try{
+            $web = User::where('phone', $login)
+                    ->orWhere('email', $login)
+                    ->orWhere('username', $login)
+                    ->first();
+            if(empty($web)){
+                return response()->json(["error"=>['code'=>'003','message'=>'User not found!']]);
+            }
 
 
-        //     $array = $web->toArray();
-        // }catch(Exception $e){
-        //     return response()->json(["error"=>['code'=>'004','message'=>'Database exception!']]);
-        // }
-        // $data = DB::table('users')->selcet('');
+            $array = $web->toArray();
+        }catch(Exception $e){
+            return response()->json(["error"=>['code'=>'004','message'=>'Database exception!']]);
+        }
+        $data = DB::table('users')->selcet('');
 
 
 
-        if($array['phone']==$login&&password_verify($passwd, $array['password'])||$array['email']==$login&&password_verify($passwd, $array['password'])||$array['username']==$login&&password_verify($passwd, $array['password'])){
+        if ($array['phone'] == $login && password_verify($passwd, $array['password']) || $array['email'] == $login && password_verify($passwd, $array['password']) || $array['username'] == $login && password_verify($passwd, $array['password'])) {
             session()->put('logined', $array);
-            if($request->input('login_state')==1){
+            if ($request->input('login_state') == 1) {
                 $code = $this->code();
                 // Cookie::queue('last_login_username', $login, 10080);
                 // Cookie::queue("login_token", $code, 10080);
                 // Cookie::queue("loginstate", 1, 10080);
-                try{
+                try {
                     $web = User::find($array['id']);
                     $web->login_token = $code;
                     $web->save();
-                }catch(Exception $e){
-                    return response()->json(["error"=>['code'=>'005','Database exception!']]);
+                } catch (Exception $e) {
+                    return response()->json(["error" => ['code' => '005', 'Database exception!']]);
                 }
             }
 
             return $this->success();
-        }else{
-            return response()->json(["error"=>['code'=>'006','message'=>'user or password is error!']]);
+        } else {
+            return response()->json(["error" => ['code' => '006', 'message' => 'user or password is error!']]);
         }
     }
 
@@ -77,27 +79,27 @@ class LoginController extends Controller
      */
     public function cookieLogin(Request $request)
     {
-        if(session()->has('logined')){
-            return response()->json(['error'=>['code'=>'001', 'message'=>'session-logined is not exists!']]);
+        if (session()->has('logined')) {
+            return response()->json(['error' => ['code' => '001', 'message' => 'session-logined is not exists!']]);
         }
-        if($request->cookie('last_login_username')!=null&&$request->cookie('login_token')!=null){
-            $login=$request->cookie('last_login_username');
-            $login_token=$request->cookie('login_token');
-            try{
+        if ($request->cookie('last_login_username') != null && $request->cookie('login_token') != null) {
+            $login = $request->cookie('last_login_username');
+            $login_token = $request->cookie('login_token');
+            try {
                 $web = User::where('phone', $login)
-                        ->orWhere('email', $login)
-                        ->orWhere('username', $login)
-                        ->first();
-            if(empty($web)){
-                return response()->json(['error'=>['code'=>'002', 'message'=>'user not found!']]);
+                    ->orWhere('email', $login)
+                    ->orWhere('username', $login)
+                    ->first();
+                if (empty($web)) {
+                    return response()->json(['error' => ['code' => '002', 'message' => 'user not found!']]);
+                }
+                $array = $web->toArray();
+            } catch (Exception $e) {
+                return response()->json(['error' => ['code' => '003', 'message' => 'Database exception']]);
             }
-            $array = $web->toArray();
-            }catch(Exception $e){
-                return response()->json(['error'=>['code'=>'003', 'message'=>'Database exception']]);
-            }
-            if($array['login_token']==$login_token){
-                if($request->cookie('loginstate')){
-                    if($request->cookie('loginstate')==1){
+            if ($array['login_token'] == $login_token) {
+                if ($request->cookie('loginstate')) {
+                    if ($request->cookie('loginstate') == 1) {
                         $code = $this->code();
                         Cookie::queue('last_login_username', $login, 10080);
                         Cookie::queue("login_token", $code, 10080);
@@ -108,7 +110,7 @@ class LoginController extends Controller
                     }
                 }
                 session()->put('logined', $array);
-                return response()->json(['success'=>['code'=>'101', 'message'=>'You\'re logged in automatically', 'avatar_url' => $array['avatar_url']]]);
+                return response()->json(['success' => ['code' => '101', 'message' => 'You\'re logged in automatically', 'avatar_url' => $array['avatar_url']]]);
             }
         }
     }
@@ -132,7 +134,7 @@ class LoginController extends Controller
         try {
             $user = Socialite::driver('qq')->user();
             $web = User::firstWhere('qq_id', $user->id);
-            if($web){
+            if ($web) {
                 session()->put('logined', $web->toArray());
                 echo <<< STR
                     <script>
@@ -148,14 +150,14 @@ class LoginController extends Controller
                     }
                     </script>
                     STR;
-            }else{
+            } else {
                 // 注册过程
                 $web2 = new User;
                 $web2->username = Common::getRandCode(8);
-                $web2->gender = ($user->user['gender']=='男')?1:2;
+                $web2->gender = ($user->user['gender'] == '男') ? 1 : 2;
                 $web2->nickname = $user->nickname;
                 $web2->qq_id = $user->id;
-                if($web2->save()){
+                if ($web2->save()) {
                     session()->put('logined', User::find($web2->id)->toArray());
                     echo <<< STR
                     <script>
@@ -171,14 +173,13 @@ class LoginController extends Controller
                     }
                     </script>
                     STR;
-                }else{
+                } else {
                     abort(500, '服务器异常');
                 }
             }
         } catch (\Throwable $th) {
             echo '<script>window.close()</script>';
         }
-
     }
 
     /**
@@ -190,8 +191,8 @@ class LoginController extends Controller
     {
         $data = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
         $code = '';
-        for($i=0;$i<64;$i++){
-            $fontContext = substr($data, rand(0, strlen($data)-1), 1);
+        for ($i = 0; $i < 64; $i++) {
+            $fontContext = substr($data, rand(0, strlen($data) - 1), 1);
             $code .= $fontContext;
         }
         return $code;
@@ -204,10 +205,10 @@ class LoginController extends Controller
      */
     public function checkLogined()
     {
-        if(session()->get('logined')!=null){
-            return response()->json(['error'=>['code'=>1, 'message'=>'Logged in']]);
-        }else{
-            return response()->json(['error'=>['code'=>0, 'message'=>'unlogged']]);
+        if (session()->get('logined') != null) {
+            return response()->json(['error' => ['code' => 1, 'message' => 'Logged in']]);
+        } else {
+            return response()->json(['error' => ['code' => 0, 'message' => 'unlogged']]);
         }
     }
     /**
@@ -222,5 +223,4 @@ class LoginController extends Controller
         Cookie::queue(Cookie::forget('login_token'));
         return redirect('/');
     }
-
 }
