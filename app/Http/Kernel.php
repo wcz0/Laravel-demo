@@ -62,7 +62,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'checksession' => \App\Http\Middleware\CheckSession::class,
-        'checkaccess' => \App\Http\Middleware\CheckAccess::class,
+        'token' => \App\Http\Middleware\CheckToken::class,
     ];
 }

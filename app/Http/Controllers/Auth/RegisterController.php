@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Services\RegisterService;
 use Error;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Redis;
 
 class RegisterController extends Controller
 {
@@ -16,9 +19,6 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        date_default_timezone_set('PRC');
-        dd(date('Y-m-d H:i:s'));
-
         $validator = Validator::make($request->all(), [
             'phone' => 'string|regex:/^1(3|4|5|6|7|8|9)\d{9}$/',
             'email' => 'string|email|required_without:phone',
@@ -38,7 +38,6 @@ class RegisterController extends Controller
         }
         $result = RegisterService::emailInsert($request->input('email'), $passwd);
 
-        dd();
         if ($result) {
             return $this->success($result);
         }else {
@@ -46,6 +45,6 @@ class RegisterController extends Controller
         }
         Error:
             return $this->fail('参数错误');
-        
+
     }
 }

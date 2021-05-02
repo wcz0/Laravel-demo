@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Psr7\Header;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -14,13 +14,15 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-
-    public $token;
-
-    public function __construct()
+    /**
+     * 解token
+     *
+     * @param string $token
+     * @return array
+     */
+    public function deToken(String $token)
     {
-        $this->token = header('Au');
-
+        
     }
 
     /**

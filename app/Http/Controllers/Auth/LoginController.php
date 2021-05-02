@@ -16,13 +16,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-
-        return $this->getToken([
-            'uid' => 1,
-            'admin' => true,
-            'expired' => time() + 3600,
-        ]);
-
         $validator = Validator::make($request->all(), [
             'phone' => 'string|regex:/^1(3|4|5|6|7|8|9)\d{9}$/',
             'email' => 'string|email|required_without:phone',
@@ -32,6 +25,17 @@ class LoginController extends Controller
             return $this->fail($validator->errors()->all());
         }
 
+
+
+
+
+        $token = $this->getToken([
+            'uid' => 1,
+            'admin' => true,
+            'expired' => time() + 3600,
+        ]);
+
+        return $this->success()
 
 
     }
